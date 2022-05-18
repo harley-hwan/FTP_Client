@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<!-- saved from url=(0032)https://nowonbun.tistory.com/694 -->
+<html lang="kr" style="position: static; overflow: auto;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/lightbox.min.css"><link rel="stylesheet" type="text/css" href="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/font.css"><link rel="stylesheet" type="text/css" href="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/content.css"><!--[if lt IE 9]><script src="https://t1.daumcdn.net/tistory_admin/lib/jquery/jquery-1.12.4.min.js"></script><![endif]--><!--[if gte IE 9]>
+<!--><script src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/f(6).txt"></script><script src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/osd.js.다운로드"></script><script src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/f(7).txt"></script><script type="text/javascript" async="" src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/analytics.js.다운로드"></script><script src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/embed.dist.js.다운로드" async=""></script><script src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/f(8).txt" id="google_shimpl"></script><script async="" src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/gtm.js.다운로드"></script><script src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/jquery-3.2.1.min.js.다운로드"></script><!--<![endif]-->
+<script src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/lightbox-plus-jquery.min.js.다운로드"></script>
+<script>
+lightbox.options.fadeDuration = 200;
+lightbox.options.resizeDuration = 200;
+lightbox.options.wrapAround = false;
+lightbox.options.albumLabel = "%1 / %2";
+</script>
+<script>var tjQuery = jQuery.noConflict(true);</script><style type="text/css">.tt_article_useless_p_margin p {padding-top:0 !important;padding-bottom:0 !important;margin-top:0 !important;margin-bottom:0 !important;}</style><meta name="referrer" content="always"><link rel="icon" href="https://t1.daumcdn.net/tistory_admin/static/top/favicon_0630.ico"><link rel="apple-touch-icon" href="https://img1.daumcdn.net/thumb/C180x180/?fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F1935C94C505D9F8B13">
+<link rel="apple-touch-icon" sizes="76x76" href="https://img1.daumcdn.net/thumb/C76x76/?fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F1935C94C505D9F8B13">
+<link rel="apple-touch-icon" sizes="120x120" href="https://img1.daumcdn.net/thumb/C120x120/?fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F1935C94C505D9F8B13">
+<link rel="apple-touch-icon" sizes="152x152" href="https://img1.daumcdn.net/thumb/C152x152/?fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F1935C94C505D9F8B13"><meta name="description" content="안녕하세요. 명월입니다. 이 글은 Window에서 FTP 서버를 구축하는 방법에 대한 글입니다. 최근에는 Cloud drive라는 클라우드 스토리지가 생겨서 어느 컴퓨터나 쉽게 파일을 공유, 백업 등을 쉽게 합니다만, 불과..">
+
+<!-- BEGIN OPENGRAPH -->
+<link rel="canonical" href="https://nowonbun.tistory.com/694"><meta property="og:type" content="article"><meta property="og:url" content="https://nowonbun.tistory.com/694"><meta property="og:site_name" content="명월 일지"><meta property="og:title" content="[Window] FTP 서버를 구축하는 방법"><meta name="by" content="明月 v명월v"><meta property="og:description" content="안녕하세요. 명월입니다. 이 글은 Window에서 FTP 서버를 구축하는 방법에 대한 글입니다. 최근에는 Cloud drive라는 클라우드 스토리지가 생겨서 어느 컴퓨터나 쉽게 파일을 공유, 백업 등을 쉽게 합니다만, 불과.."><meta property="og:image" content="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&amp;fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F99E0A5335E4407A82F"><meta property="article:section" content="IT 인터넷">
+<!-- END OPENGRAPH -->
+
+
+
+<!-- BEGIN TWITTERCARD -->
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content="@TISTORY"><meta name="twitter:title" content="[Window] FTP 서버를 구축하는 방법"><meta name="twitter:description" content="안녕하세요. 명월입니다. 이 글은 Window에서 FTP 서버를 구축하는 방법에 대한 글입니다. 최근에는 Cloud drive라는 클라우드 스토리지가 생겨서 어느 컴퓨터나 쉽게 파일을 공유, 백업 등을 쉽게 합니다만, 불과.."><meta property="twitter:image" content="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&amp;fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F99E0A5335E4407A82F">
+<!-- END TWITTERCARD -->
+
+
+
+<!-- BEGIN DAUMAPP -->
+<meta property="dg:plink" content="https://nowonbun.tistory.com/694"><meta name="plink" content="https://nowonbun.tistory.com/694"><meta name="title" content="[Window] FTP 서버를 구축하는 방법"><meta name="article:media_name" content="명월 일지"><meta property="article:mobile_url" content="https://nowonbun.tistory.com/m/694"><meta property="article:pc_url" content="https://nowonbun.tistory.com/694"><meta property="article:mobile_view_url" content="https://nowonbun.tistory.com/m/694"><meta property="article:pc_view_url" content="https://nowonbun.tistory.com/694"><meta property="article:talk_channel_view_url" content="https://nowonbun.tistory.com/m/694"><meta property="article:pc_service_home" content="https://www.tistory.com"><meta property="article:mobile_service_home" content="https://www.tistory.com/m"><meta property="article:txid" content="1041549_694"><meta property="article:published_time" content="2020-02-13T09:00:00+09:00"><meta property="og:regDate" content="20200212231454"><meta property="article:modified_time" content="2020-02-13T09:00:17+09:00">
+<!-- END DAUMAPP -->
+
+
+
+<!-- BEGIN STRUCTURED_DATA -->
+<script type="application/ld+json">{"@context":"http:\/\/schema.org","@type":"BlogPosting","mainEntityOfPage":{"@id":"https:\/\/nowonbun.tistory.com\/694"},"url":"https:\/\/nowonbun.tistory.com\/694","headline":"[Window] FTP \uc11c\ubc84\ub97c \uad6c\ucd95\ud558\ub294 \ubc29\ubc95","description":"\uc548\ub155\ud558\uc138\uc694. \uba85\uc6d4\uc785\ub2c8\ub2e4. \uc774 \uae00\uc740 Window\uc5d0\uc11c FTP \uc11c\ubc84\ub97c \uad6c\ucd95\ud558\ub294 \ubc29\ubc95\uc5d0 \ub300\ud55c \uae00\uc785\ub2c8\ub2e4. \ucd5c\uadfc\uc5d0\ub294 Cloud drive\ub77c\ub294 \ud074\ub77c\uc6b0\ub4dc \uc2a4\ud1a0\ub9ac\uc9c0\uac00 \uc0dd\uaca8\uc11c \uc5b4\ub290 \ucef4\ud4e8\ud130\ub098 \uc27d\uac8c \ud30c\uc77c\uc744 \uacf5\uc720, \ubc31\uc5c5 \ub4f1\uc744 \uc27d\uac8c \ud569\ub2c8\ub2e4\ub9cc, \ubd88\uacfc..","author":{"@type":"Person","name":"\u660e\u6708 v\uba85\uc6d4v"},"image":{"@type":"ImageObject","url":"https:\/\/img1.daumcdn.net\/thumb\/R800x0\/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F99E0A5335E4407A82F","width":"800px","height":"800px"},"datePublished":"20200213T09:00:00+09:00","dateModified":"20200213T09:00:17+09:00","publisher":{"@type":"Organization","name":"TISTORY","logo":{"@type":"ImageObject","url":"https:\/\/t1.daumcdn.net\/tistory_admin\/static\/images\/openGraph\/opengraph.png","width":"800px","height":"800px"}}}</script><meta name="robots" content="max-image-preview:large">
+<!-- END STRUCTURED_DATA -->
+
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-WML6GQ9');</script>
+<!-- End Google Tag Manager -->
+<script async="" src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/f(9).txt"></script>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({
+          google_ad_client: "ca-pub-6300064900388375",
+          enable_page_level_ads: true
+     });
+</script>
+<!--<link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap" rel="stylesheet">-->
+<style type="text/css">
+@font-face { 
+	font-family: 'Noto Sans KR';
+	src: url('https://nowonbun.github.io/nowonbunfont/NotoSansKR-Regular.otf') format('opentype');
+	font-style:normal;
+	font-weight:normal;
+}
+body{
+	font-family: 'Noto Sans KR', 'Arial',sans-serif!important;
+}
+</style>
+<!--<script src="https://tistory2.daumcdn.net/tistory/1041549/skin/images/redirect.js"></script>-->
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="theme-color" content="#29343a">
+<title>명월 일지 :: [Window] FTP 서버를 구축하는 방법</title>
+<link rel="stylesheet" type="text/css" href="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/style.css">
+<link rel="alternate" type="application/rss+xml" title="명월 일지" href="https://nowonbun.tistory.com/rss">
+<meta name="Author" content="v명월v">
+<meta name="title" content="명월 일지 :: [Window] FTP 서버를 구축하는 방법">
+<meta name="keywords" content="C# programming, C#, ASP.net, Java, C++, C Programming, MFC, ASP, Jquery, javascript, Sample Code, Sample Source, Software, HTML5">
+<meta name="distribution" content="nowonbun@gmail.com">
+<meta name="copyright" content="nowonbun@gmail.com">
+<meta name="robots" content="ALL">
+<meta property="og:type" content="blog">
+<meta property="og:image" content="https://tistory2.daumcdn.net/tistory/1041549/skin/images/nowonbuntistory.png">
+<meta property="twitter:image" content="https://tistory2.daumcdn.net/tistory/1041549/skin/images/nowonbuntistory.png">
+
+<!--meta property="og:title" content="명월 일지 :: [Window] FTP 서버를 구축하는 방법" />
+<meta property="og:description" content="개발은 언제나 즐겁다._*)~_" />
+<meta property="og:url" content="/" />
+<meta property="og:type" content="blog" />
+<meta property="og:site_name" content="명월 일지" /-->
+
+
+<meta name="google-site-verification" content="ljPQvQ6mq2E944lm0Rs7S8zSSYT8Fbc3gQxtLS5wb7I">
+<meta name="naver-site-verification" content="32aa8ce7d767e05669cb5b31f2579de56cc15359">
+<!-- start:css link -->
+<link rel="stylesheet" href="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<link rel="stylesheet" href="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/font-awesome.min.css">
+<link rel="stylesheet" href="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/toastr.min.css">
+<link rel="stylesheet" href="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/rainbow.min.css">
+<!--<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">-->
+<!--<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">-->
+<link rel="stylesheet" href="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/highlight.init.css">
+<link rel="stylesheet" href="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/post.css">
+<link rel="stylesheet" href="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/nowonbun.css">
+<link rel="stylesheet" href="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/loader.css">
+<!-- end:css link -->
+<!-- start: javascript link -->
+<script src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/jquery-3.3.1.min.js.다운로드" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/bootstrap.min.js.다운로드" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/toastr.min.js.다운로드"></script>
+<script type="text/javascript" src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/moment.min.js.다운로드"></script>
+<script type="text/javascript" src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/jquery.cookie.js.다운로드"></script>
+<script async="" src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/f(9).txt"></script>
+<!-- end: javascript link -->
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+		<link rel="stylesheet" type="text/css" href="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/captcha.css">
+		<script type="text/javascript">
+			var needCommentCaptcha = true;
+			var commentCaptchaType = 'bottom';
+		</script>
+<style type="text/css">
+		#daumSearchBox {
+			height: 21px;
+			background-image : url(//i1.daumcdn.net/imgsrc.search/search_all/show/tistory/plugin/bg_search2_2.gif);
+			margin: 5px auto ;
+			padding: 0;
+		}
+		#daumSearchBox input {
+			background: none;
+			margin : 0;
+			padding : 0;
+			border : 0;
+		}
+		#daumSearchBox #daumLogo {
+			width: 34px;
+			height: 21px;
+			float: left;
+			margin-right: 5px;
+			background-image : url(//i1.daumcdn.net/img-media/tistory/img/bg_search1_2_2010ci.gif);
+		}
+		#daumSearchBox #show_q {
+			background-color: transparent;
+			border: none;
+			font: 12px Gulim, Sans-serif;
+			color: #555;
+			margin-top: 4px;
+			margin-right: 15px;
+			float: left;
+		}
+
+		#daumSearchBox #show_btn {
+			background-image : url(//i1.daumcdn.net/imgsrc.search/search_all/show/tistory/plugin/bt_search_2.gif);
+			width: 37px;
+			height: 21px;
+			float: left;
+			margin:0;
+			cursor:pointer;
+			text-indent:-1000em;
+		}
+	</style>
+<link rel="stylesheet" type="text/css" href="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/style(1).css">
+<script type="text/javascript" src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/profile.js.다운로드"></script>
+	<style type="text/css">
+		.another_category { border: 1px solid #E5E5E5; padding: 10px 10px 5px; margin:10px 0; clear: both; }
+		.another_category h4 { font-size: 12px !important; margin: 0 !important; border-bottom: 1px solid #E5E5E5 !important; padding: 2px 0 6px !important; }
+		.another_category h4 a { font-weight: bold !important; }
+		.another_category table { table-layout: fixed; border-collapse: collapse; width: 100% !important; margin-top: 10px !important; }
+		* html .another_category table { width: auto !important; }
+		*:first-child+html .another_category table { width: auto !important; }
+		.another_category th, .another_category td { padding: 0 0 4px !important; }
+		.another_category th { text-align: left; font-size: 12px !important; font-weight: normal;  word-break: break-all; overflow: hidden; line-height: 1.5; }
+		.another_category td { text-align: right; width: 80px; font-size: 11px; }
+		.another_category th a { font-weight: normal; text-decoration: none; border: none !important; }
+		.another_category th a.current{ font-weight: bold; text-decoration: none !important; border-bottom: 1px solid !important; }
+		.another_category th span { font-weight: normal; text-decoration: none; font: 10px Tahoma, Sans-serif; border: none !important; }
+
+		.another_category_color_gray, .another_category_color_gray h4 { border-color: #E5E5E5 !important; }
+		.another_category_color_gray * { color: #909090 !important; }
+		.another_category_color_gray th a.current{border-color:#909090 !important;}
+		.another_category_color_gray h4, .another_category_color_gray h4 a { color: #737373 !important; }
+
+
+		.another_category_color_red, .another_category_color_red h4 { border-color: #F6D4D3 !important;  }
+		.another_category_color_red * { color: #E86869 !important; }
+		.another_category_color_red th a.current{border-color:#E86869 !important;}
+		.another_category_color_red h4, .another_category_color_red h4 a { color: #ED0908 !important; }
+
+
+		.another_category_color_green, .another_category_color_green h4 { border-color: #CCE7C8 !important; }
+		.another_category_color_green * { color: #64C05B !important; }
+		.another_category_color_green th a.current{border-color:#64C05B !important;}
+		.another_category_color_green h4, .another_category_color_green h4 a { color: #3EA731 !important; }
+
+
+		.another_category_color_blue, .another_category_color_blue h4 { border-color: #C8DAF2 !important; }
+		.another_category_color_blue * { color: #477FD6 !important; }
+		.another_category_color_blue th a.current{border-color:#477FD6 !important;}
+		.another_category_color_blue h4, .another_category_color_blue h4 a { color: #1960CA !important; }
+
+
+		.another_category_color_violet, .another_category_color_violet h4 { border-color: #E1CEEC !important;  }
+		.another_category_color_violet * { color:#9D64C5 !important; }
+		.another_category_color_violet th a.current{border-color:#9D64C5 !important;}
+		.another_category_color_violet h4, .another_category_color_violet h4 a { color: #7E2CB5 !important; }
+	</style>
+<script type="text/javascript">
+        
+        window.TistoryBlog = {
+            basePath: "",
+            url: "https://nowonbun.tistory.com",
+            tistoryUrl: "https://nowonbun.tistory.com",
+			manageUrl: 'https://nowonbun.tistory.com/manage',
+            token: 'Jkk/5xsaKqQMNCA6cyX+jQ=='
+        };
+        var servicePath = "";
+        var blogURL = "";
+    </script>
+
+	<script> (function() { window.orgjQuery = window.jQuery; window.jQuery = tjQuery })()</script>
+    <script type="text/javascript" defer="" src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/reaction-button-container.min.js.다운로드"></script>
+    <script> (function() { window.jQuery = window.orgjQuery; delete window.orgjQuery })()</script>
+        <script type="text/javascript" src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/base.js.다운로드"></script>
+        <link rel="stylesheet" type="text/css" href="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/dialog.css">
+            <link rel="stylesheet" type="text/css" href="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/font(1).css">
+    <link rel="stylesheet" type="text/css" href="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/postBtn.css">
+        <link rel="stylesheet" type="text/css" href="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/tistory.css">
+        <script src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/kakao.min.js.다운로드"></script><meta http-equiv="origin-trial" content="A2shzsdPO+RKe83bUqT9oVkYwGZN6j9O7nrcOASNFPuQz8HefgVYb9qAqn6coNCSDIRtXoi6ybCrjEsYh3caFgIAAAB7eyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiVHJ1c3RUb2tlbnMiLCJleHBpcnkiOjE2MTM0OTU4NjgsImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="AxL6K+7uLMunmYb1wpp/pnDPBsoQgMGPaTDkE6HIAKvHNoXilVyfzrIZM9q7OUqMUDJCYgIlFmJcvooS3kGjowMAAACOeyJvcmlnaW4iOiJodHRwczovL3d3dy5nb29nbGVhZHNlcnZpY2VzLmNvbTo0NDMiLCJmZWF0dXJlIjoiQ29udmVyc2lvbk1lYXN1cmVtZW50IiwiZXhwaXJ5IjoxNjE0MTI0Nzk5LCJpc1N1YmRvbWFpbiI6dHJ1ZSwiaXNUaGlyZFBhcnR5Ijp0cnVlfQ=="><meta http-equiv="origin-trial" content="A2shzsdPO+RKe83bUqT9oVkYwGZN6j9O7nrcOASNFPuQz8HefgVYb9qAqn6coNCSDIRtXoi6ybCrjEsYh3caFgIAAAB7eyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiVHJ1c3RUb2tlbnMiLCJleHBpcnkiOjE2MTM0OTU4NjgsImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="AxL6K+7uLMunmYb1wpp/pnDPBsoQgMGPaTDkE6HIAKvHNoXilVyfzrIZM9q7OUqMUDJCYgIlFmJcvooS3kGjowMAAACOeyJvcmlnaW4iOiJodHRwczovL3d3dy5nb29nbGVhZHNlcnZpY2VzLmNvbTo0NDMiLCJmZWF0dXJlIjoiQ29udmVyc2lvbk1lYXN1cmVtZW50IiwiZXhwaXJ5IjoxNjE0MTI0Nzk5LCJpc1N1YmRvbWFpbiI6dHJ1ZSwiaXNUaGlyZFBhcnR5Ijp0cnVlfQ=="><style type="text/css">.hljs-ln{border-collapse:collapse}.hljs-ln td{padding:0}.hljs-ln-n:before{content:attr(data-line-number)}</style><style type="text/css">.hljs-ln{border-collapse:collapse}.hljs-ln td{padding:0}.hljs-ln-n:before{content:attr(data-line-number)}</style><style type="text/css">#DragSchLayer{display:block;position:absolute;z-index:1000;width:61px;height:31px;margin:-30px 0px 0px -5px;background:url(//search1.daumcdn.net/search/statics/common/pi/btn_drag_rect.png);cursor:pointer}             @media             only screen and (-webkit-min-device-pixel-ratio: 1.5),             only screen and (min-device-pixel-ratio: 1.5),             only screen and (min-resolution: 1.5dppx) {             #DragSchLayer{background-image:url(//search1.daumcdn.net/search/statics/common/pi/r2/btn_drag_rect.png);background-size:61px 31px}}            </style><link rel="preload" href="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/f(10).txt" as="script"><script type="text/javascript" src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/f(10).txt"></script><link rel="preload" href="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/f(11).txt" as="script"><script type="text/javascript" src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/f(11).txt"></script></head>
+<body aria-hidden="false">
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WML6GQ9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<!-- http://www.botstill.com/www.tistory.com/guide/skin/step0.html -->
+	<script type="text/javascript">
+	(function() {
+		if (!window.T) {
+			window.T = {}
+		}
+		window.T.config = {"TOP_SSL_URL":"https:\/\/www.tistory.com","PREVIEW":false,"ROLE":"guest","PREV_PAGE":"\/695","NEXT_PAGE":"\/693","BLOG":{"isDormancy":false,"title":"\uba85\uc6d4 \uc77c\uc9c0"},"NEED_COMMENT_LOGIN":false,"COMMENT_LOGIN_CONFIRM_MESSAGE":"","LOGIN_URL":"https:\/\/www.tistory.com\/auth\/login\/?redirectUrl=http%3A%2F%2Fnowonbun.tistory.com%2F694","DEFAULT_URL":"https:\/\/nowonbun.tistory.com","USER":{"name":null,"homepage":null},"ROLE_GROUP":"visitor","SUBSCRIPTION":{"status":"none","isConnected":false,"isProcessing":false,"isPending":false,"isWait":false,"isNone":true},"IS_LOGIN":false,"HAS_BLOG":false,"TOP_URL":"http:\/\/www.tistory.com","JOIN_URL":"https:\/\/www.tistory.com\/member\/join"};
+		window.appInfo = {"domain":"tistory.com","topUrl":"https:\/\/www.tistory.com","loginUrl":"https:\/\/www.tistory.com\/auth\/login","logoutUrl":"https:\/\/www.tistory.com\/auth\/logout"};
+
+        window.initData = {};
+        
+	})();
+</script>
+
+<script type="text/javascript" src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/common.js.다운로드"></script>
+<div style="margin:0; padding:0; border:none; background:none; float:none; clear:none; z-index:0"></div>
+	<header>
+		<nav class="navbar">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="https://nowonbun.tistory.com/694#" onclick="menu(&#39;left&#39;)"><span class="menuSpan">MENU</span></a> 
+				<a class="navbar-brand title" href="https://nowonbun.tistory.com/"><span>명월 일지</span></a>
+				<!--<a class="navbar-brand" href="#" onclick="menu('right')"><span class="menuSpan">LIST</span></a>-->
+			</div>
+		</nav>
+	</header>
+	<section class="headerspace"></section>
+	<aside id="leftside" class="off" style="height: 696px;">
+		<h2 class="side-header"><img src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/1935C94C505D9F8B13" alt="v명월v">명월 일지</h2>
+		<div class="side-menu bs-glyphicons">
+			<ul class="bs-glyphicons-list">
+			<li onclick="location.href=&#39;/&#39;;">
+				<span class="glyphicon glyphicon-home" aria-hidden="true" title="홈으로"></span>
+				<span>홈으로</span>
+			</li>
+			<li onclick="location.href=&#39;http://www.tistory.com/auth/login?redirectUrl=&#39;+location.href;">
+				<span class="glyphicon glyphicon-log-in" aria-hidden="true" title="로그인"></span>
+				<span>로그인</span>
+			</li>
+			<li>
+				<span class="glyphicon glyphicon-star-empty" aria-hidden="true" title=".."></span>
+				<span>...</span>
+			</li>
+			<li onclick="location.href=&#39;/guestbook&#39;;">
+				<span class="glyphicon glyphicon-pencil" aria-hidden="true" title="방명록"></span>
+				<span>방명록</span>
+			</li>
+			<li onclick="menu(&#39;close&#39;);">
+				<span class="glyphicon glyphicon-remove" aria-hidden="true" title="메뉴닫기"></span>
+				<span>메뉴닫기</span>
+			</li>
+			</ul>
+		</div>
+		<s_sidebar_element>
+			<div class="”search”"> 
+				
+					<input class="form-control search-text-box" type="search" placeholder="Search..." onkeypress="if (event.keyCode == 13) { try{window.location.href=&#39;/search/&#39; + document.getElementsByName(&#39;search&#39;)[0].value.replaceAll(&#39;%&#39;, &#39;%50&#39;);document.getElementsByName(&#39;search&#39;)[0].value = &#39;&#39;; return false;}catch(e){} }" value="" name="search">
+					<button class="btn btn-success search-text-button" onclick="try{window.location.href=&#39;/search/&#39; + document.getElementsByName(&#39;search&#39;)[0].value.replaceAll(&#39;%&#39;, &#39;%25&#39;);document.getElementsByName(&#39;search&#39;)[0].value = &#39;&#39;; return false;}catch(e){}">Search</button>
+				
+			</div>
+		</s_sidebar_element>
+		<div class="side-list">
+			<ul class="tt_category">
+	<li class="">
+		<a class="link_tit" href="https://nowonbun.tistory.com/category">
+			분류 전체보기							<span class="c_cnt">(607)</span>
+			
+							<img src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/new_ico_1.gif" alt="N" style="vertical-align:middle;padding-left:2px;">
+					</a>
+
+				<ul class="category_list">
+							<li class="">
+					<a class="link_item link-item-collapse" href="javascript:void(0)">
+						Development note													<span class="c_cnt">(252)</span>
+						
+													<img src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/new_ico_1.gif" alt="N" style="vertical-align:middle;padding-left:2px;">
+											<a href="https://nowonbun.tistory.com/694#" class="glyphicon glyphicon-triangle-bottom pull-right" aria-hidden="true"></a></a>
+
+										<ul class="sub_category_list on">
+													<li class="">
+								<a class="link_sub_item" href="https://nowonbun.tistory.com/category/Development%20note/C%20%2C%20C%2B%2B%20%2C%20MFC">
+									C , C++ , MFC
+																			<span class="c_cnt">(19)</span>
+									
+																	</a>
+							</li>
+													<li class="">
+								<a class="link_sub_item" href="https://nowonbun.tistory.com/category/Development%20note/C%EF%BC%83">
+									C＃
+																			<span class="c_cnt">(68)</span>
+									
+																			<img src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/new_ico_1.gif" alt="N" style="vertical-align:middle;padding-left:2px;">
+																	</a>
+							</li>
+													<li class="">
+								<a class="link_sub_item" href="https://nowonbun.tistory.com/category/Development%20note/Java">
+									Java
+																			<span class="c_cnt">(47)</span>
+									
+																	</a>
+							</li>
+													<li class="">
+								<a class="link_sub_item" href="https://nowonbun.tistory.com/category/Development%20note/PHP">
+									PHP
+																			<span class="c_cnt">(19)</span>
+									
+																	</a>
+							</li>
+													<li class="">
+								<a class="link_sub_item" href="https://nowonbun.tistory.com/category/Development%20note/Python">
+									Python
+																			<span class="c_cnt">(21)</span>
+									
+																	</a>
+							</li>
+													<li class="">
+								<a class="link_sub_item" href="https://nowonbun.tistory.com/category/Development%20note/Javascript%2C%20JQuery%2C%20CSS">
+									Javascript, JQuery, CSS
+																			<span class="c_cnt">(31)</span>
+									
+																	</a>
+							</li>
+													<li class="">
+								<a class="link_sub_item" href="https://nowonbun.tistory.com/category/Development%20note/Window">
+									Window
+																			<span class="c_cnt">(7)</span>
+									
+																	</a>
+							</li>
+													<li class="">
+								<a class="link_sub_item" href="https://nowonbun.tistory.com/category/Development%20note/Linux">
+									Linux
+																			<span class="c_cnt">(31)</span>
+									
+																	</a>
+							</li>
+													<li class="">
+								<a class="link_sub_item" href="https://nowonbun.tistory.com/category/Development%20note/Etc.">
+									Etc.
+																			<span class="c_cnt">(9)</span>
+									
+																	</a>
+							</li>
+											</ul>
+					
+				</li>
+							<li class="">
+					<a class="link_item link-item-collapse" href="javascript:void(0)">
+						Study													<span class="c_cnt">(307)</span>
+						
+											<a href="https://nowonbun.tistory.com/694#" class="glyphicon glyphicon-triangle-bottom pull-right" aria-hidden="true"></a></a>
+
+										<ul class="sub_category_list on">
+													<li class="">
+								<a class="link_sub_item" href="https://nowonbun.tistory.com/category/Study/C%20%2C%20C%2B%2B%20%2C%20MFC">
+									C , C++ , MFC
+																			<span class="c_cnt">(28)</span>
+									
+																	</a>
+							</li>
+													<li class="">
+								<a class="link_sub_item" href="https://nowonbun.tistory.com/category/Study/Java">
+									Java
+																			<span class="c_cnt">(58)</span>
+									
+																	</a>
+							</li>
+													<li class="">
+								<a class="link_sub_item" href="https://nowonbun.tistory.com/category/Study/C%EF%BC%83">
+									C＃
+																			<span class="c_cnt">(75)</span>
+									
+																	</a>
+							</li>
+													<li class="">
+								<a class="link_sub_item" href="https://nowonbun.tistory.com/category/Study/PHP">
+									PHP
+																			<span class="c_cnt">(30)</span>
+									
+																	</a>
+							</li>
+													<li class="">
+								<a class="link_sub_item" href="https://nowonbun.tistory.com/category/Study/Javascript%2C%20Jquery%2C%20CSS">
+									Javascript, Jquery, CSS
+																			<span class="c_cnt">(41)</span>
+									
+																	</a>
+							</li>
+													<li class="">
+								<a class="link_sub_item" href="https://nowonbun.tistory.com/category/Study/Python">
+									Python
+																			<span class="c_cnt">(21)</span>
+									
+																	</a>
+							</li>
+													<li class="">
+								<a class="link_sub_item" href="https://nowonbun.tistory.com/category/Study/Database">
+									Database
+																			<span class="c_cnt">(13)</span>
+									
+																	</a>
+							</li>
+													<li class="">
+								<a class="link_sub_item" href="https://nowonbun.tistory.com/category/Study/Design%20Pattern">
+									Design Pattern
+																			<span class="c_cnt">(31)</span>
+									
+																	</a>
+							</li>
+													<li class="">
+								<a class="link_sub_item" href="https://nowonbun.tistory.com/category/Study/Project%20design">
+									Project design
+																			<span class="c_cnt">(10)</span>
+									
+																	</a>
+							</li>
+													<li class="">
+								<a class="link_sub_item" href="https://nowonbun.tistory.com/category/Study/Algorithm">
+									Algorithm
+																			<span class="c_cnt">(0)</span>
+									
+																	</a>
+							</li>
+											</ul>
+					
+				</li>
+							<li class="">
+					<a class="link_item link-item-collapse" href="javascript:void(0)">
+						Open source													<span class="c_cnt">(33)</span>
+						
+											<a href="https://nowonbun.tistory.com/694#" class="glyphicon glyphicon-triangle-bottom pull-right" aria-hidden="true"></a></a>
+
+										<ul class="sub_category_list on">
+													<li class="">
+								<a class="link_sub_item" href="https://nowonbun.tistory.com/category/Open%20source/C%23">
+									C#
+																			<span class="c_cnt">(2)</span>
+									
+																	</a>
+							</li>
+													<li class="">
+								<a class="link_sub_item" href="https://nowonbun.tistory.com/category/Open%20source/Javascript%2C%20Jquery%2C%20CSS">
+									Javascript, Jquery, CSS
+																			<span class="c_cnt">(11)</span>
+									
+																	</a>
+							</li>
+													<li class="">
+								<a class="link_sub_item" href="https://nowonbun.tistory.com/category/Open%20source/Bootstrap">
+									Bootstrap
+																			<span class="c_cnt">(18)</span>
+									
+																	</a>
+							</li>
+													<li class="">
+								<a class="link_sub_item" href="https://nowonbun.tistory.com/category/Open%20source/Tool">
+									Tool
+																			<span class="c_cnt">(2)</span>
+									
+																	</a>
+							</li>
+											</ul>
+					
+				</li>
+							<li class="">
+					<a class="link_item link-item-collapse" href="javascript:void(0)">
+						Other													<span class="c_cnt">(15)</span>
+						
+											<a href="https://nowonbun.tistory.com/694#" class="glyphicon glyphicon-triangle-bottom pull-right" aria-hidden="true"></a></a>
+
+										<ul class="sub_category_list on">
+													<li class="">
+								<a class="link_sub_item" href="https://nowonbun.tistory.com/category/Other/Experience">
+									Experience
+																			<span class="c_cnt">(9)</span>
+									
+																	</a>
+							</li>
+													<li class="">
+								<a class="link_sub_item" href="https://nowonbun.tistory.com/category/Other/Japan%20life">
+									Japan life
+																			<span class="c_cnt">(6)</span>
+									
+																	</a>
+							</li>
+													<li class="">
+								<a class="link_sub_item" href="https://nowonbun.tistory.com/category/Other/Secret%20document">
+									Secret document
+																			<span class="c_cnt">(0)</span>
+									
+																	</a>
+							</li>
+											</ul>
+					
+				</li>
+					</ul>
+			</li>
+</ul>
+		</div>
+	</aside>
+	<!--<aside id="rightside">
+		<h2 class="side-header">
+			<a href="#" onclick="menu('close');">
+				<span class="glyphicon glyphicon-remove" aria-hidden="true" title="메뉴닫기"></span>
+				<span>메뉴닫기</span>
+			</a>
+			<span>
+				<s_search>
+					<input type="text" name="" value="" onkeypress="if (event.keyCode == 13) {  }"/>
+					<input value="검색" type="button" onclick="" class="submit"/>
+				</s_search>
+			</span>
+		</h2>
+		<div id="recentList">
+			<h3 class="rightsideTitle">최근에 올라온 글</h3>
+			<ol>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+			</ol>
+		</div>
+		<hr>
+		<div id="categoryList">
+			<h3 class="rightsideTitle">카테고리 다른글</h3>
+			<ol>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+			</ol>
+		</div>
+	</aside>-->
+	<section class="backgroundLayout off" onclick="menu(&#39;close&#39;);"></section>
+	<main role="main" class="off">
+	<!-- start:main -->
+		<div id="main" class="container">
+			<!-- 메인 -->
+			<div id="content" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				<!-- ************************검색 결과 리스트************************-->
+				
+				<!-- ************************검색 결과 리스트************************-->
+				<!-- ************************공지사항************************-->
+				
+				<!-- ************************공지사항************************-->
+				<!-- ************************방명록************************-->
+				
+				<!-- ************************방명록************************-->
+				<!-- ************************글************************-->
+				
+				<article class="entry">
+					
+					
+						<div class="post-article" itemscope="" itemtype="https://schema.org/ComputerLanguage">
+							<!-- 글 관련 정보 : 글제목, 카테고리, 날짜, 관리자 -->
+							<div class="titleArea">
+								<h1 class="title">[Window] FTP 서버를 구축하는 방법</h1>
+								<hr class="titileHr">
+								<div class="categoryArea">
+									<a href="https://nowonbun.tistory.com/category/Development%20note/Window">Development note/Window</a> &nbsp;2020. 2. 13. 09:00
+									
+								</div>
+							</div>
+							<!-- 글 관련 정보 : 글제목, 카테고리, 날짜, 관리자 -->
+							<!-- 블로그 글 -->
+							<!--<div class="adsenseHeadDefault"></div>-->
+							<ins class="adsbygoogle adsens_responsive" style="display: inline-block; width: 970px; height: 90px;" data-ad-client="ca-pub-6300064900388375" data-ad-slot="3977396448" data-adsbygoogle-status="done"><ins id="aswift_1_expand" style="display:inline-table;border:none;height:90px;margin:0;padding:0;position:relative;visibility:visible;width:970px;background-color:transparent;" tabindex="0" title="Advertisement" aria-label="Advertisement"><ins id="aswift_1_anchor" style="display:block;border:none;height:90px;margin:0;padding:0;position:relative;visibility:visible;width:970px;background-color:transparent;"><iframe id="aswift_1" name="aswift_1" style="left:0;position:absolute;top:0;border:0;width:970px;height:90px;" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" width="970" height="90" frameborder="0" src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/ads.html" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" allowfullscreen="true" data-google-container-id="a!1" data-google-query-id="CPvzvu6swO4CFcuRlgodwF0L9w" data-load-complete="true"></iframe></ins></ins></ins>
+							<script>
+							(adsbygoogle = window.adsbygoogle || []).push({});
+							</script>
+							<div class="article" itemprop="description"><div class="tt_article_useless_p_margin"><p>안녕하세요. 명월입니다.</p><p><br></p><p>이 글은 Window에서 FTP 서버를 구축하는 방법에 대한 글입니다.</p><p><br></p><p>최근에는 Cloud drive라는 클라우드 스토리지가 생겨서 어느 컴퓨터나 쉽게 파일을 공유, 백업 등을 쉽게 합니다만, 불과 10년 전만 해도 많은 사람이 메일이나 usb 등으로 파일을 공유나 백업 등을 많이 했습니다.</p><p>메일의 단점은 인터넷이 되는 어디서든 파일을 공유할 수는 있지만 파일 관리가 어렵고 용량의 제한이 있고, usb의 경우는 가지고 다녀야 하는 불편함이 있고 역시나 용량의 제한이 있습니다.</p><p><br></p><p>그래서 서버를 좀 다룰 줄 아는 개발자나 SE 정도면 집에 NAS 서버 하나 구축해서 FTP로 파일을 공유하곤 했습니다.</p><p>그러나 아까 이야기처럼 Cloud drive 때문에 최근에는 FTP를 사용하는 빈도가 많이 낮아졌고 회사에서는 FTP보다는 아무래도 삼바(smb) 네트워크가 아무래도 편하다 보니 최근에는 거의 사용하지 않습니다.</p><p><br></p><p>그러나 개인적인 생각으로 프로그램 개발상에서는 Cloud drive api를 사용하기에는 조금 부담이 있고 사내에서는 smb보다는 좀 더 보안적이고 쉽게 개발할 수 있는 프로토콜로는 FTP가 낫지 않을까 싶습니다.</p><p><br></p><p>Window 환경에서는 FTP 서버를 구축하기 위해서 따로 프로그램을 설치할 필요 없고, 기본 패키지로 있으니 설치만 하면 됩니다.</p><p style="text-align: left; clear: none; float: none;"><span class="imageblock" style="display:inline-block;width:399px;;height:auto;max-width:100%"><img src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/99F7CE3E5E4407B22A" style="max-width:100%;height:auto" width="399" height="206" filename="001.png" filemime="image/png"></span></p><p>제어판으로 가서 프로그램 및 기능으로 갑니다.</p><p style="text-align: left; clear: none; float: none;"><span class="imageblock" style="display:inline-block;width:507px;;height:auto;max-width:100%"><img src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/992D33465E4407B207" style="max-width:100%;height:auto" width="507" height="172" filename="002.png" filemime="image/png"></span></p><p>그리고 Windows 기능 켜기/끄기를 선택합니다.</p><p style="text-align: left; clear: none; float: none;"><span class="imageblock" style="display:inline-block;width:236px;;height:auto;max-width:100%"><img src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/9988C83C5E4407B217" style="max-width:100%;height:auto" width="236" height="140" filename="003.png" filemime="image/png"></span></p><p>그리고 FTP서버와 IIS관리 콘솔을 선택합니다.</p><p style="text-align: left; clear: none; float: none;"><span class="imageblock" style="display:inline-block;width:415px;;height:auto;max-width:100%"><img src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/996B90475E4407B216" style="max-width:100%;height:auto" width="415" height="432" filename="004.png" filemime="image/png"></span></p><p>확인을 누르면 설치가 시작됩니다.</p><p style="text-align: left; clear: none; float: none;"><span class="imageblock" style="display:inline-block;width:658px;;height:auto;max-width:100%"><img src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/9989813D5E4407B22B" style="max-width:100%;height:auto" width="658" height="480" filename="005.png" filemime="image/png"></span></p><p>그리고 수분을 기다리면 설치가 완료됩니다.</p><p style="text-align: left; clear: none; float: none;"><span class="imageblock" style="display:inline-block;width:399px;;height:auto;max-width:100%"><img src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/99D4894E5E4407B236" style="max-width:100%;height:auto" width="399" height="632" filename="006.png" filemime="image/png"></span></p><p>그리고 프로그램 검색에 iis라고 치면 인터넷 서비스 관리 콘솔 프로그램이 검색이 되는데 그걸 클릭해서 실행합니다.</p><p style="text-align: left; clear: none; float: none;"><span class="imageblock" style="display:inline-block;width:330px;;height:auto;max-width:100%"><img src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/99A434495E4407B228" style="max-width:100%;height:auto" width="330" height="300" filename="007.png" filemime="image/png"></span></p><p>그리고 사이트 항목에서 마우스 오른쪽을 클릭하면 FTP 사이트 추가 항목이 있습니다.</p><p style="text-align: left; clear: none; float: none;"><span class="imageblock" style="display:inline-block;width:673px;;height:auto;max-width:100%"><img src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/99C6E8465E4407B232" style="max-width:100%;height:auto" width="673" height="514" filename="008.png" filemime="image/png"></span></p><p>그리고 사이트 이름을 넣고 FTP 서버로 파일 업로드, 다운로드 할 경로를 설정한다.</p><p style="text-align: left; clear: none; float: none;"><span class="imageblock" style="display:inline-block;width:673px;;height:auto;max-width:100%"><img src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/9983F54D5E4407B202" style="max-width:100%;height:auto" width="673" height="514" filename="009.png" filemime="image/png"></span></p><p>그리고 만약 따로 호스트 설정이 있으면 IP 설정에 호스트 도네임을 넣으면 되고 특별히 제한이 없다면 지정하지 않아도 됩니다.</p><p>또 SSL 설정이 필요하면 인증서를 넣으면 되고 없으면 사용 안 함으로 설정합니다.</p><p style="text-align: left; clear: none; float: none;"><span class="imageblock" style="display:inline-block;width:673px;;height:auto;max-width:100%"><img src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/99631E3F5E4407B232" style="max-width:100%;height:auto" width="673" height="514" filename="010.png" filemime="image/png"></span></p><p>그리고 마지막에 인증은 익명 사용자도 접속을 허용하려면 익명 체크하면 되나 보통은 보안을 생각해서 설정하지 않습니다.</p><p>그리고 기본은 체크합니다. 권한은 아직 유저를 만들지 않았기 때문에 선택되지 않음으로 설정합니다.</p><p><br></p><p>이번에는 유저를 추가하겠습니다.</p><p style="text-align: left; clear: none; float: none;"><span class="imageblock" style="display:inline-block;width:301px;;height:auto;max-width:100%"><img src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/995FB7395E4407B21E" style="max-width:100%;height:auto" width="301" height="612" filename="011.png" filemime="image/png"></span></p><p>시작 메뉴에서 마우스 오른쪽 클릭해서 컴퓨터 관리를 엽니다.</p><p style="text-align: left; clear: none; float: none;"><span class="imageblock" style="display:inline-block;width:697px;;height:auto;max-width:100%"><img src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/992A67455E4407B22F" style="max-width:100%;height:auto" width="697" height="466" filename="012.png" filemime="image/png"></span></p><p>그리고 로컬 사용자에서 사용자를 클릭하고 새 사용자를 추가합니다.</p><p style="text-align: left; clear: none; float: none;"><span class="imageblock" style="display:inline-block;width:443px;;height:auto;max-width:100%"><img src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/993411415E4407B234" style="max-width:100%;height:auto" width="443" height="441" filename="013.png" filemime="image/png"></span></p><p>그리고 사용자 이름(id)를 입력하고 패스워드를 넣습니다.</p><p>그리고 첫 접속시 패스워드 변경 체크 박스를 해제하고 암호 변경할 수 없음과 기간 제한 없음을 체크합니다.</p><p style="text-align: left; clear: none; float: none;"><span class="imageblock" style="display:inline-block;width:473px;;height:auto;max-width:100%"><img src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/9908104C5E4407B233" style="max-width:100%;height:auto" width="473" height="188" filename="014.png" filemime="image/png"></span></p><p><br></p><p>관리 창에 유저가 추가된 것을 확인할 수 있습니다.</p><p><br></p><p>다시 IIS(인터넷 서비스 관리 콘솔)로 돌아오겠습니다.</p><p style="text-align: left; clear: none; float: none;"><span class="imageblock" style="display:inline-block;width:700px;;height:auto;max-width:100%"><span data-url="https://t1.daumcdn.net/cfile/tistory/9943963F5E4407B239?download" data-lightbox="lightbox"><img src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/9943963F5E4407B239" style="cursor: pointer;max-width:100%;height:auto" width="700" height="349" filename="015.png" filemime="image/png"></span></span></p><p>ftp를 선택하고 FTP 권한 부여 규칙을 클릭합니다.</p><p style="text-align: left; clear: none; float: none;"><span class="imageblock" style="display:inline-block;width:374px;;height:auto;max-width:100%"><img src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/999DC2485E4407B225" style="max-width:100%;height:auto" width="374" height="257" filename="016.png" filemime="image/png"></span></p><p>그리고 오른쪽 마우스를 클릭해서 허용 규칙 추가를 누릅니다.</p><p style="text-align: left; clear: none; float: none;"><span class="imageblock" style="display:inline-block;width:469px;;height:auto;max-width:100%"><img src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/9908CD385E4407B231" style="max-width:100%;height:auto" width="469" height="424" filename="017.png" filemime="image/png"></span></p><p>사용자 관리에서 생성했던 사용자 이름(ID)를 넣고 읽기, 쓰기 권한을 체크합니다.</p><p>여기까지 FTP 설정이 끝났습니다.</p><p><br></p><p>여기서 파일 탐색기(Explorer)에서 ftp://localhost로 접속합니다.</p><p style="text-align: left; clear: none; float: none;"><span class="imageblock" style="display:inline-block;width:304px;;height:auto;max-width:100%"><img src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/9947DC435E4407B22C" style="max-width:100%;height:auto" width="304" height="128" filename="018.png" filemime="image/png"></span></p><p>그러면 id, pw를 입력하는 화면 창이 나옵니다.</p><p style="text-align: left; clear: none; float: none;"><span class="imageblock" style="display:inline-block;width:562px;;height:auto;max-width:100%"><img src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/997FE73B5E4407B325" style="max-width:100%;height:auto" width="562" height="388" filename="019.png" filemime="image/png"></span></p><p>아까 입력한 id, pw를 넣고 로그온을 합니다.</p><p>그럼 접속이 됩니다.</p><p><br></p><p>예제로 파일 하나를 드래그 해서 ftp로 복사합니다.</p><p style="text-align: left; clear: none; float: none;"><span class="imageblock" style="display:inline-block;width:287px;;height:auto;max-width:100%"><img src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/99F322345E4407B32A" style="max-width:100%;height:auto" width="287" height="394" filename="020.png" filemime="image/png"></span></p><p>그리고 ftp 설정했던 업로드/다운로드 경로를 확인하면 파일이 복사되어 있는 걸 확인할 수 있습니다.</p><p><br></p><p>제대로 설정이 되었습니다.</p><p><br></p><p>여기까지 Window에서 FTP 서버를 구축하는 방법에 대한 글이었습니다.</p><p><br></p><p>궁금한 점이나 잘못된 점이 있으면 댓글 부탁드립니다.</p><div class="container_postbtn #post_button_group">
+    <div class="postbtn_like">
+        
+<script>
+    window.ReactionButtonType = 'reaction';
+    window.ReactionApiUrl = '//nowonbun.tistory.com/reaction';
+    window.ReactionReqBody = {
+        entryId: 694    }
+</script>
+<div class="wrap_btn" id="reaction-694"><button class="btn_post uoc-icon"><div class="uoc-icon"><span class="ico_postbtn ico_like">좋아요</span><span class="txt_like uoc-count">7</span></div></button></div>
+<script src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/reaction-button-container.min.js.다운로드"></script>
+        <div class="wrap_btn wrap_btn_share">
+    <button type="button" class="btn_post sns_btn btn_share" data-thumbnail-url="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&amp;fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F99E0A5335E4407A82F" data-title="[Window] FTP 서버를 구축하는 방법" data-description="안녕하세요. 명월입니다. 이 글은 Window에서 FTP 서버를 구축하는 방법에 대한 글입니다. 최근에는 Cloud drive라는 클라우드 스토리지가 생겨서 어느 컴퓨터나 쉽게 파일을 공유, 백업 등을 쉽게 합니다만, 불과.." data-profile-image="https://t1.daumcdn.net/cfile/tistory/1935C94C505D9F8B13" data-profile-name="明月 v명월v" data-pc-url="https://nowonbun.tistory.com/694" data-relative-pc-url="/694" data-blog-title="명월 일지">
+        <span class="ico_share">공유하기</span>
+    </button>
+</div>
+                <div class="wrap_btn wrap_btn_etc" data-entry-id="694" data-entry-visibility="public" data-category-visibility="public">
+    <button type="button" class="btn_post btn_etc2"><span class="ico_postbtn ico_etc">글 요소</span></button>
+</div>
+    </div>
+    <button type="button" class="btn_menu_toolbar btn_subscription  #subscribe" data-blog-id="1041549" data-url="https://nowonbun.tistory.com/694" data-device="web_pc">
+    <em class="txt_state">구독하기</em>
+    <strong class="txt_tool_id">명월 일지</strong>
+    <span class="img_common_tistory ico_check_type1"></span>
+</button>
+    <div class="postbtn_ccl" data-ccl-type="3">
+    <a href="https://creativecommons.org/licenses/by/4.0/deed.ko" target="_blank" class="link_ccl">
+        <span class="bundle_ccl">
+            <span class="ico_postbtn ico_ccl1">저작자표시</span>        </span>
+    </a>
+</div>
+    <!--
+<rdf:RDF xmlns="http://web.resource.org/cc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <Work rdf:about="">
+        <license rdf:resource="http://creativecommons.org/licenses/by-fr/2.0/kr/" />
+    </Work>
+    <License rdf:about="http://creativecommons.org/licenses/by-fr/">
+        <permits rdf:resource="http://web.resource.org/cc/Reproduction"/>
+        <permits rdf:resource="http://web.resource.org/cc/Distribution"/>
+        <requires rdf:resource="http://web.resource.org/cc/Notice"/>
+        <requires rdf:resource="http://web.resource.org/cc/Attribution"/>
+                <permits rdf:resource="http://web.resource.org/cc/DerivativeWorks"/>
+                    </License>
+</rdf:RDF>
+-->
+</div><div class="another_category another_category_color_blue">
+<h4>'<a href="https://nowonbun.tistory.com/category/Development%20note">Development note</a>&nbsp;&gt;&nbsp;<a href="https://nowonbun.tistory.com/category/Development%20note/Window">Window</a>' 카테고리의 다른 글</h4>
+<table>
+<tbody><tr>
+<th>
+<a href="https://nowonbun.tistory.com/93?category=640790">[Window] NoSql 서버 Caasandra를 설치하는 방법</a>&nbsp;&nbsp;<span>(0)</span>
+</th>
+<td>
+2020.07.08</td>
+</tr>
+<tr>
+<th>
+<a href="https://nowonbun.tistory.com/37?category=640790">[Window] MariaDB를 설치하는 방법</a>&nbsp;&nbsp;<span>(0)</span>
+</th>
+<td>
+2020.06.12</td>
+</tr>
+<tr>
+<th>
+<a href="https://nowonbun.tistory.com/694?category=640790" class="current">[Window] FTP 서버를 구축하는 방법</a>&nbsp;&nbsp;<span>(0)</span>
+</th>
+<td>
+2020.02.13</td>
+</tr>
+<tr>
+<th>
+<a href="https://nowonbun.tistory.com/681?category=640790">[Window] apache-tomcat에서 로드 밸런싱(Load balancing)하는 방법과 세션 클러스터링(세션 공유)</a>&nbsp;&nbsp;<span>(0)</span>
+</th>
+<td>
+2020.01.28</td>
+</tr>
+<tr>
+<th>
+<a href="https://nowonbun.tistory.com/679?category=640790">[Window] Apache에서 mode_jk와 mod_proxy차이, apache에서 tomcat으로 websocket 프록시 포워딩하는 방법</a>&nbsp;&nbsp;<span>(0)</span>
+</th>
+<td>
+2020.01.24</td>
+</tr>
+<tr>
+<th>
+<a href="https://nowonbun.tistory.com/547?category=640790">[Window] Window에서 Explorer의 Context 메뉴를 편집하는 방법</a>&nbsp;&nbsp;<span>(0)</span>
+</th>
+<td>
+2019.07.23</td>
+</tr>
+<tr>
+<th>
+<a href="https://nowonbun.tistory.com/323?category=640790">[Window] Apache 설치 방법, 서비스에 등록하는 방법</a>&nbsp;&nbsp;<span>(0)</span>
+</th>
+<td>
+2019.07.18</td>
+</tr>
+</tbody></table></div></div></div>
+							<!--<div class="adsenseFootDefault"></div>-->
+							<ins class="adsbygoogle adsens_responsive" style="display: inline-block; width: 970px; height: 90px;" data-ad-client="ca-pub-6300064900388375" data-ad-slot="6930862840" data-adsbygoogle-status="done"><ins id="aswift_2_expand" style="display:inline-table;border:none;height:90px;margin:0;padding:0;position:relative;visibility:visible;width:970px;background-color:transparent;"><ins id="aswift_2_anchor" style="display:block;border:none;height:90px;margin:0;padding:0;position:relative;visibility:visible;width:970px;background-color:transparent;"></ins></ins></ins>
+							<script>
+							(adsbygoogle = window.adsbygoogle || []).push({});
+							</script>
+							<!-- 최신 글 타겟팅 -->
+							<div class="recent-post-target">
+			
+					<!-- 최근에 올라온 글 -->
+					<div class="recentPost another_category">
+						<h4>최근에 올라온 글 </h4>
+						<table>	
+							<tbody>
+								
+									<tr>
+										<th><a href="https://nowonbun.tistory.com/91">[C#] 프로그래밍에 필요한 pixel 이미지 만들기 그리고 스트라이프 이미지 만들기</a></th>
+										<!--<td><span class="cnt"><span id="commentCountOnRecentEntries91">(1)</span></span></td>-->
+									</tr>
+								
+
+									<tr>
+										<th><a href="https://nowonbun.tistory.com/159">[C#] 소리 파일(wav) 및 음악 파일(mp3)를 다루는 방법</a></th>
+										<!--<td><span class="cnt"><span id="commentCountOnRecentEntries159"></span></span></td>-->
+									</tr>
+								
+
+									<tr>
+										<th><a href="https://nowonbun.tistory.com/105">[C#] Clipboard(복사 + 붙여넣기 기능)을 다루는 방법</a></th>
+										<!--<td><span class="cnt"><span id="commentCountOnRecentEntries105"></span></span></td>-->
+									</tr>
+								
+
+									<tr>
+										<th><a href="https://nowonbun.tistory.com/172">[C#] 커널 드라이브 생성(Dokan)하는 방법(Cloud 프로젝트)</a></th>
+										<!--<td><span class="cnt"><span id="commentCountOnRecentEntries172">(9)</span></span></td>-->
+									</tr>
+								
+
+									<tr>
+										<th><a href="https://nowonbun.tistory.com/156">[C#] 프로그램을 서비스(Services.msc)에 등록하는 방법</a></th>
+										<!--<td><span class="cnt"><span id="commentCountOnRecentEntries156"></span></span></td>-->
+									</tr>
+								
+
+									<tr>
+										<th><a href="https://nowonbun.tistory.com/118">[C#] 스포이드 프로그램(color hex-data 추출기)</a></th>
+										<!--<td><span class="cnt"><span id="commentCountOnRecentEntries118">(5)</span></span></td>-->
+									</tr>
+								
+
+									<tr>
+										<th><a href="https://nowonbun.tistory.com/122">[C#] 키보드와 마우스의 전역 이벤트를 사용하는 법(키보드와 마우스 후킹)</a></th>
+										<!--<td><span class="cnt"><span id="commentCountOnRecentEntries122">(7)</span></span></td>-->
+									</tr>
+								
+
+									<tr>
+										<th><a href="https://nowonbun.tistory.com/116">[C#] GDI의 Graphic 객체 사용법과 더블 버퍼링 구현하는 방법</a></th>
+										<!--<td><span class="cnt"><span id="commentCountOnRecentEntries116">(3)</span></span></td>-->
+									</tr>
+								
+
+									<tr>
+										<th><a href="https://nowonbun.tistory.com/104">[C#] 윈도우에서 컨트롤 동기화하는 방법(InvalidOperationException 에러)</a></th>
+										<!--<td><span class="cnt"><span id="commentCountOnRecentEntries104"></span></span></td>-->
+									</tr>
+								
+
+									<tr>
+										<th><a href="https://nowonbun.tistory.com/191">[Javascript] 웹 사이트나 블로그등에 소스 코드 보기(highlightjs.min.js)</a></th>
+										<!--<td><span class="cnt"><span id="commentCountOnRecentEntries191">(1)</span></span></td>-->
+									</tr>
+								
+							</tbody>
+						</table>
+					</div>
+				
+		</div>
+							<!-- 블로그 글 -->
+							<!-- 2-8-3. 글 관련 태그 -->
+							
+							<!-- 2-8-3. 글 관련 태그 -->
+							<hr>
+							<!-- 2-8-4. 트랙백과 댓글 보이기/감추기 -->
+							<!--<div class="actionTrail ">
+								<ul class="nav nav-tabs nav-justified">
+									<li><a href="#commentList" onclick="commnet();"> 댓글 </a></li>
+								</ul>
+							</div>-->
+							<!-- 2-8-4. 트랙백과 댓글 보이기/감추기 -->
+							<div id="commentList" class="tab-content">
+								<!-- 2-8-6. 댓글 -->
+								<div class="commentCnt">
+								
+								</div>
+								<div id="lv-container" data-id="city" data-uid="MTAyMC80Nzk2Ni8yNDQ2Mw==">
+	<script type="text/javascript">
+		window.livereOptions = {
+			refer: 'https://nowonbun.tistory.com/694'
+		};
+		(function(d, s) {
+			var j, e = d.getElementsByTagName(s)[0];
+
+			if (typeof LivereTower === 'function') { return; }
+
+			j = d.createElement(s);
+			j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+			j.async = true;
+
+			e.parentNode.insertBefore(j, e);
+		})(document, 'script');
+	</script>
+	<noscript>라이브리 댓글 작성을 위해 JavaScript를 활성화 해주세요</noscript>
+<iframe title="livereAd" scrolling="no" frameborder="0" src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/ad.html" id="lv-ad-804" style="min-width: 100%; width: 100px; height: 259px; overflow: visible; border: 0px; z-index: 124212;"></iframe></div>
+								<!-- 2-8-6. 댓글 -->
+							</div>
+						</div>
+					
+				</article>
+				
+				<!-- ************************글************************-->
+			</div>
+			<!-- 메인 -->
+		</div>
+	<!-- end:main -->
+	</main><ins class="adsbygoogle adsbygoogle-noablate" data-adsbygoogle-status="done" style="display: none !important;"><ins id="aswift_0_expand" style="display:inline-table;border:none;height:0px;margin:0;padding:0;position:relative;visibility:visible;width:0px;background-color:transparent;" tabindex="0" title="Advertisement" aria-label="Advertisement"><ins id="aswift_0_anchor" style="display:block;border:none;height:0px;margin:0;padding:0;position:relative;visibility:visible;width:0px;background-color:transparent;"><iframe id="aswift_0" name="aswift_0" style="left:0;position:absolute;top:0;border:0;width:undefinedpx;height:undefinedpx;" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" frameborder="0" src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/ads(1).html" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" allowfullscreen="true" data-google-container-id="a!0" data-load-complete="true"></iframe></ins></ins></ins>
+	<!-- ************************2-9. 페이징************************ -->
+	
+		<nav class="paging" aria-label="Page navigation">
+			<ul class="pagination">
+				<li href="/695" class="">
+					<a href="https://nowonbun.tistory.com/694#" aria-label="Previous">
+						<span aria-hidden="true">«</span>
+					</a>
+				</li>
+				
+					<li><a href="https://nowonbun.tistory.com/91"><span>1</span></a></li>
+				
+					<li><a><span>···</span></a></li>
+				
+					<li><a href="https://nowonbun.tistory.com/364"><span>171</span></a></li>
+				
+					<li><a href="https://nowonbun.tistory.com/363"><span>172</span></a></li>
+				
+					<li><a href="https://nowonbun.tistory.com/696"><span>173</span></a></li>
+				
+					<li><a href="https://nowonbun.tistory.com/695"><span>174</span></a></li>
+				
+					<li class="active"><a><span class="selected">175</span></a></li>
+				
+					<li><a href="https://nowonbun.tistory.com/693"><span>176</span></a></li>
+				
+					<li><a href="https://nowonbun.tistory.com/345"><span>177</span></a></li>
+				
+					<li><a href="https://nowonbun.tistory.com/692"><span>178</span></a></li>
+				
+					<li><a href="https://nowonbun.tistory.com/92"><span>179</span></a></li>
+				
+					<li><a><span>···</span></a></li>
+				
+					<li><a href="https://nowonbun.tistory.com/78"><span>607</span></a></li>
+				
+				<li href="/693" class="">
+					<a href="https://nowonbun.tistory.com/694#" aria-label="Next">
+						<span aria-hidden="true">»</span>
+					</a>
+				</li>
+			</ul>
+		</nav>
+	
+	<!-- ************************2-9. 페이징************************ -->
+	<!-- start:footer -->
+	<footer>
+		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 footer-bottom">
+			<!-- 방문자수 -->
+			<p>
+				<span class="total">Total : 1,707,849 </span>
+				<span class="today">Today : 1,152</span>
+				<span class="yesterday">Yesterday : 3,355</span>
+			</p>
+			<p>Copyright © 2016 nowonbun.tistory.com(Email : <a href="mailto:nowonbun@gmail.com" target="_blank">nowonbun@gmail.com</a>)</p>
+		</div>
+	</footer>
+	<!-- end:footer -->
+	<section style="display: none" id="template">
+		<div id="blogImage">https://t1.daumcdn.net/cfile/tistory/1935C94C505D9F8B13</div>
+		<div id="loginstate"></div>
+		<div class="recent-post">
+			
+					<!-- 최근에 올라온 글 -->
+					<div class="recentPost another_category">
+						<h4>최근에 올라온 글 </h4>
+						<table>	
+							<tbody>
+								
+									<tr>
+										<th><a href="https://nowonbun.tistory.com/91">[C#] 프로그래밍에 필요한 pixel 이미지 만들기 그리고 스트라이프 이미지 만들기</a></th>
+										<!--<td><span class="cnt"><span id="commentCountOnRecentEntries91">(1)</span></span></td>-->
+									</tr>
+								
+
+									<tr>
+										<th><a href="https://nowonbun.tistory.com/159">[C#] 소리 파일(wav) 및 음악 파일(mp3)를 다루는 방법</a></th>
+										<!--<td><span class="cnt"><span id="commentCountOnRecentEntries159"></span></span></td>-->
+									</tr>
+								
+
+									<tr>
+										<th><a href="https://nowonbun.tistory.com/105">[C#] Clipboard(복사 + 붙여넣기 기능)을 다루는 방법</a></th>
+										<!--<td><span class="cnt"><span id="commentCountOnRecentEntries105"></span></span></td>-->
+									</tr>
+								
+
+									<tr>
+										<th><a href="https://nowonbun.tistory.com/172">[C#] 커널 드라이브 생성(Dokan)하는 방법(Cloud 프로젝트)</a></th>
+										<!--<td><span class="cnt"><span id="commentCountOnRecentEntries172">(9)</span></span></td>-->
+									</tr>
+								
+
+									<tr>
+										<th><a href="https://nowonbun.tistory.com/156">[C#] 프로그램을 서비스(Services.msc)에 등록하는 방법</a></th>
+										<!--<td><span class="cnt"><span id="commentCountOnRecentEntries156"></span></span></td>-->
+									</tr>
+								
+
+									<tr>
+										<th><a href="https://nowonbun.tistory.com/118">[C#] 스포이드 프로그램(color hex-data 추출기)</a></th>
+										<!--<td><span class="cnt"><span id="commentCountOnRecentEntries118">(5)</span></span></td>-->
+									</tr>
+								
+
+									<tr>
+										<th><a href="https://nowonbun.tistory.com/122">[C#] 키보드와 마우스의 전역 이벤트를 사용하는 법(키보드와 마우스 후킹)</a></th>
+										<!--<td><span class="cnt"><span id="commentCountOnRecentEntries122">(7)</span></span></td>-->
+									</tr>
+								
+
+									<tr>
+										<th><a href="https://nowonbun.tistory.com/116">[C#] GDI의 Graphic 객체 사용법과 더블 버퍼링 구현하는 방법</a></th>
+										<!--<td><span class="cnt"><span id="commentCountOnRecentEntries116">(3)</span></span></td>-->
+									</tr>
+								
+
+									<tr>
+										<th><a href="https://nowonbun.tistory.com/104">[C#] 윈도우에서 컨트롤 동기화하는 방법(InvalidOperationException 에러)</a></th>
+										<!--<td><span class="cnt"><span id="commentCountOnRecentEntries104"></span></span></td>-->
+									</tr>
+								
+
+									<tr>
+										<th><a href="https://nowonbun.tistory.com/191">[Javascript] 웹 사이트나 블로그등에 소스 코드 보기(highlightjs.min.js)</a></th>
+										<!--<td><span class="cnt"><span id="commentCountOnRecentEntries191">(1)</span></span></td>-->
+									</tr>
+								
+							</tbody>
+						</table>
+					</div>
+				
+		</div>
+	</section>
+	<!--<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>-->
+	<!-- javascript link -->
+	<script src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/highlight.min.js.다운로드"></script>
+	<script src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/highlightjs-line-numbers.js.다운로드"></script>
+	<script type="text/javascript" src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/highlightjs-line-numbers.js.다운로드"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+    <script>hljs.initLineNumbersOnLoad();</script>
+	<!--<script>dp.SyntaxHighlighter.HighlightAll('code');</script>-->
+    <script type="text/javascript" src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/post.js.다운로드" charset="utf-8"></script>
+	<script src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/nowonbun.js.다운로드"></script>
+	<!-- javascript link -->
+<script type="text/javascript" src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/wcslog.js.다운로드"></script>
+<script type="text/javascript">
+	if(!wcs_add) var wcs_add = {};
+	wcs_add["wa"] = encodeURI("240b7144110708");
+	wcs_do();
+</script><script src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/search_dragselection.min.js.다운로드"></script>
+<script>
+    (function($) {
+        $("body").bind('copy', function (e) {
+
+            var url = document.location.href,
+                decodedUrl = decodeURI(url),
+                selection = window.getSelection();
+
+
+            if (typeof window.getSelection == "undefined") {//IE8 or earlier...
+                event.preventDefault();
+
+                var pagelink = '\n\n 출처: ' + decodedUrl,
+                    copytext = selection + pagelink;
+
+                if (window.clipboardData) {
+                    window.clipboardData.setData('Text', copytext);
+                }
+                return;
+            }
+            var body_element = document.getElementsByTagName('body')[0];
+
+            //if the selection is short let's not annoy our users
+            if (("" + selection).length < 30) return;
+
+            //create a div outside of the visible area
+            var newdiv = document.createElement('div');
+            newdiv.style.position = 'absolute';
+            newdiv.style.left = '-99999px';
+            body_element.appendChild(newdiv);
+            newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+            //we need a <pre> tag workaround
+            //otherwise the text inside "pre" loses all the line breaks!
+            if (selection.getRangeAt(0).commonAncestorContainer.nodeName == "PRE") {
+                newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+            }
+
+            newdiv.innerHTML += '<br /><br />출처: <a href="' + url + '">' + escapeHTML(decodedUrl) + '</a> [명월 일지]';
+
+            selection.selectAllChildren(newdiv);
+
+            window.setTimeout(function () {
+                body_element.removeChild(newdiv);
+            }, 200);
+        });
+    })(tjQuery);
+</script>
+	<script>
+	    lightbox.option({
+			"fadeDuration": 200,
+		    "resizeDuration": 200,
+		    "wrapAround": false,
+			"albumLabel": "%1 / %2",
+			"fitImagesInViewport":true ,
+			"stopEvent": false
+	    })
+	</script>            <script type="text/javascript" src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/tiara.min.js.다운로드"></script>
+            <script type="text/javascript">window.tiara = {"svcDomain":"user.tistory.com","section":"\uae00\ubdf0","trackPage":"\uae00\ubdf0_\ubcf4\uae30","page":"\uae00\ubdf0","key":"1041549-694","customProps":{"userId":0,"blogId":"1041549","role":"guest","filterTarget":false,"trackPage":"\uae00\ubdf0_\ubcf4\uae30","entryId":"694"},"entry":{"entryId":"694","categoryName":"Window","categoryId":"640790","author":"771442","authorId":"771442","image":"771442","plink":"\/694","tags":[],"key":"1041549-694"},"sentryDsn":"https:\/\/a53520229cd744e798d42900d76b0e2a@aem-collector.daumkakao.io\/713","kakaoAppKey":"b8aef3eeb03fa312b81795386484f051","appUserId":null};</script>
+            <script type="text/javascript" src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/tiara.min.js(1).다운로드" defer=""></script>
+                        <script type="text/javascript">
+                window.roosevelt_params_queue = window.roosevelt_params_queue || [{channel_id: 'dk', channel_label: 'tistory'}];
+            </script>
+            <script type="text/javascript" src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/roosevelt_dk_bt.js.다운로드" async=""></script><script type="text/javascript">if(window.console!=undefined){setTimeout(console.log.bind(console,"%cTISTORY","font:8em Arial;color:#EC6521;font-weight:bold"),0);setTimeout(console.log.bind(console,"%c  나를 표현하는 블로그","font:2em sans-serif;color:#333;"),0);}</script><iframe style="position:absolute;width:1px;height:1px;left:-100px;top:-100px" src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/api.html" id="editEntry"></iframe><div id="tistoryEtcLayer" class="layer_post" style="display: none;"></div><div id="tistorySnsLayer" class="layer_post" style="display: none;"><div class="bundle_post"><a href="https://nowonbun.tistory.com/694#none" class="btn_mark" data-service="facebook"><span class="ico_sns ico_fb"></span>페이스북으로 공유</a><a href="https://nowonbun.tistory.com/694#none" class="btn_mark" data-service="kakaotalk"><span class="ico_sns ico_kt"></span>카카오톡으로 공유</a><a href="https://nowonbun.tistory.com/694#none" class="btn_mark" data-service="kakaostory"><span class="ico_sns ico_ks"></span>카카오스토리로 공유</a><a href="https://nowonbun.tistory.com/694#none" class="btn_mark" data-service="twitter"><span class="ico_sns ico_tw"></span>트위터로 공유</a><a href="https://nowonbun.tistory.com/694#none" class="btn_mark" data-service="url"><span class="ico_sns ico_url"></span>URL 복사</a><span class="ico_postbtn ico_arrbt"></span></div></div>
+
+<div id="lightboxOverlay" class="lightboxOverlay" style="display: none;"></div><div id="lightbox" class="lightbox" style="display: none;"><div class="lb-outerContainer"><div class="lb-container"><img class="lb-image" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="><div class="lb-nav"><a class="lb-prev" href="https://nowonbun.tistory.com/694"></a><a class="lb-next" href="https://nowonbun.tistory.com/694"></a></div><div class="lb-loader"><a class="lb-cancel"></a></div></div></div><div class="lb-dataContainer"><div class="lb-data"><div class="lb-details"><span class="lb-caption"></span><span class="lb-number"></span></div><div class="lb-closeContainer"><a class="lb-close"></a></div></div></div></div><iframe id="google_osd_static_frame_898453980156" name="google_osd_static_frame" style="display: none; width: 0px; height: 0px;" src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/saved_resource(3).html"></iframe></body><iframe id="google_esf" name="google_esf" src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/zrt_lookup.html" data-ad-client="ca-pub-6300064900388375" style="display: none;"></iframe><ins class="adsbygoogle adsbygoogle-noablate" data-adsbygoogle-status="done" style="display: none !important; width: 100vw !important; height: 100vh !important; inset: 0px auto auto 0px !important; clear: none !important; float: none !important; margin: 0px !important; max-height: none !important; max-width: none !important; opacity: 1 !important; overflow: visible !important; padding: 0px !important; position: fixed !important; vertical-align: baseline !important; visibility: visible !important; z-index: 2147483647 !important; background-color: transparent;" aria-hidden="true" data-vignette-loaded="true"><ins id="aswift_3_expand" style="display: inline-table !important; border: none !important; height: 100vh !important; margin: 0px !important; padding: 0px !important; position: relative !important; visibility: visible !important; width: 100vw !important; background-color: transparent !important; inset: auto !important; clear: none !important; float: none !important; max-height: none !important; max-width: none !important; opacity: 1 !important; overflow: visible !important; vertical-align: baseline !important; z-index: auto !important;" tabindex="0" title="Advertisement" aria-label="Advertisement"><ins id="aswift_3_anchor" style="display: block !important; border: none !important; height: 100vh !important; margin: 0px !important; padding: 0px !important; position: relative !important; visibility: visible !important; width: 100vw !important; background-color: transparent !important; inset: auto !important; clear: none !important; float: none !important; max-height: none !important; max-width: none !important; opacity: 1 !important; overflow: visible !important; vertical-align: baseline !important; z-index: auto !important;"><iframe id="aswift_3" name="" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" width="" height="" frameborder="0" src="./명월 일지 __ [Window] FTP 서버를 구축하는 방법_files/zrt_lookup(1).html" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" allowfullscreen="true" style="width: 100vw !important; height: 100vh !important; inset: 0px auto auto 0px !important; position: absolute !important; clear: none !important; display: inline !important; float: none !important; margin: 0px !important; max-height: none !important; max-width: none !important; opacity: 1 !important; overflow: visible !important; padding: 0px !important; vertical-align: baseline !important; visibility: visible !important; z-index: auto !important;" data-google-container-id="a!3" data-google-query-id="CMaSv-6swO4CFYSAlgodwjsEsw" data-load-complete="true"></iframe></ins></ins></ins></html>

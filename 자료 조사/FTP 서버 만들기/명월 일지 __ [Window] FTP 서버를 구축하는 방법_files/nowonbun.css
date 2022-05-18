@@ -1,0 +1,209 @@
+@charset "utf-8";
+/*******************
+*     공통 처리
+********************/
+/*@font-face {
+	font-family: 'childpaper';
+	src: url('childpaper.woff') format('truetype');
+}*/
+
+/*@import url('https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap');*/
+/*body{
+	font-family: 'Noto Sans KR', sans-serif;
+}*/
+
+body, header, footer{
+	min-width:320px;
+}
+/*******************
+*      모바일 처리
+********************/
+@media screen and (max-width:768px) {
+	header nav{
+		padding:0px 0px;
+	}
+	/*해더 재정의 버그...(왜 부트스트랩엔 이런 기능이 있지??)*/
+	div.navbar-header{
+		margin-left: 0px!important;
+	}
+	/*사이드바 위치(왼쪽 상단 고정)*/
+	/*aside#leftside{
+		position: absolute;
+		top: 0px;
+		/*z-index: 1001;
+	}*/
+	/*오른쪽사이드바*/
+	/*aside#rightside{
+		position: absolute;
+		top: 0px;
+		/*z-index: 1001;
+	}*/
+	main div#main{
+		padding:0px;
+		margin-right: 0px;
+		margin-left: 0px;
+	}
+	div#content{
+		padding-left: 3px!important;
+		padding-right: 3px!important;
+	}
+	/*.post-article{
+		margin: 0px -10px;
+	}*/
+	.titleWrap h2, main h1.title{
+		font-size: 2.2rem;
+	}
+	main div.article {
+		/*font-size: 1.5rem;*/
+		font-size: 1.2rem;
+	}
+	article > div.searchListEntity{
+		padding: 0px 5px;
+	}
+	.h3, h3 {
+		font-size: 2rem;
+	}
+	body, 
+	div.actionTrail ul.nav.nav-tabs.nav-justified a,
+	div.commentCnt,
+	div.commentCnt,
+	div.commentList span.name, 
+	div.guestList span.name,
+	a.btnComment,
+	div.commentList p.commentContents, 
+	div.guestList p.commentContents,
+	blockquote,
+	div.searchList h3,
+	article > div.searchListEntity > div.list-body a.list-link > p.list-summary,
+	div.commentSet, 
+	div.guestWrite{
+		font-size:1.2rem;
+	}
+	div.searchList h3,
+	div.searchList h3>span:before,
+	div.searchList h3>span:after,
+	article > div.searchListEntity > div.list-body a.list-link > h1,
+	div.searchList h1>span{
+		font-size:1.5rem;
+	}
+	pre{
+		font-size:1rem;
+	}
+	.hljs {
+		padding:0px;
+		width: 100%;
+	}
+	.hljs-ln-line{
+		margin-left:0px;
+	}
+	.hljs-ln-numbers .hljs-ln-line{
+		margin-right: 3px;
+	}
+	blockquote{
+		padding:2px;
+	}
+	article p, .article p {
+		line-height: 20px;
+	}
+	div.sourcecode > div > div{
+		margin: 5px 0px!important;
+		font-size :7px!important;
+		padding:1px!important;
+	}
+	div.sourcecode:before {
+		font-size: 7px;
+		line-height: 20px;
+	}
+    .article h2>b {
+        padding: 5px;
+        font-size: 1.5rem;
+    }
+    blockquote p {
+        font-size: 1.0rem;
+    }
+	.hljs-ln-code .hljs-ln-line {
+		white-space: pre;
+	}
+}
+/*******************
+*    브라우저 처리
+********************/
+@media screen and (min-width:768px) {
+	/*사이드바가 나올때 뒤 배경흐리기*/
+	main.on{
+		/*-webkit-filter:blur(1px);*/
+	}
+	.post-article{
+		/*box-shadow:1px 1px 3px;*/
+        box-shadow:2px 2px 6px;
+		padding:10px;
+	}
+	/*main div#main{
+		padding:0px;
+		margin-right: 0px;
+		margin-left: 0px;
+	}*/
+	.container{
+		width: 100%;
+	}
+	/*div.content{
+		padding: 0px;
+	}*/
+}
+@media screen and (min-width: 870px) {
+	.container {
+		width: 850px;
+	}
+}
+@media screen and (min-width: 992px) {
+	.container {
+		width: 970px;
+	}
+}
+@media screen and (min-width: 1200px) {
+	.container {
+		width: 1050px;
+	}
+}
+@media screen and (min-width: 1370px) {
+	header{
+		display: none;
+	}
+	section.headerspace{
+		height:10px;
+	}
+	main{
+		display:inline;
+	}
+	div#main.container{
+		display: inline-block;
+		vertical-align: top;
+	}
+	aside#leftside{
+		position: inherit;
+		display: inline-block;
+		vertical-align: top;
+		height: 100%!important;
+		padding-bottom: 60px;
+	}
+	/*section.paging{
+		width:1050px;
+		margin-left:300px;
+		padding-top: 10px;
+	}*/
+	nav.paging{
+		width:1050px;
+		margin-left:300px;
+	}
+	body{
+		width: 1370px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+	footer{
+	    position: absolute;
+		width: 100%;
+		/* margin-left: 0px; */
+		left: 0px;
+	}
+}

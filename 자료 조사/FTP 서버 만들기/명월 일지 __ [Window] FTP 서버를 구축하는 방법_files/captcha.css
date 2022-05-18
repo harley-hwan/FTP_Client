@@ -1,0 +1,20 @@
+/* bottom type */
+#tt_captChaBottom {positon:relative;margin-bottom:10px;clear:both;}
+#tt_captChaBottom .wrap_box_border {position:relative;height:84px;opacity:0.1;filter:alpha(opacity=10)}
+#tt_captChaBottom .wrap_box_bg {width:100%;height:100%;opacity:0.5;filter:alpha(opacity=50);}
+#tt_captChaBottom .inner_captcha_box {position:absolute;width:100%;z-index:1;}
+#tt_captChaBottom .inner_captcha_box img {float:left;}
+#tt_captChaBottom .wrap_captcha_inner {float:left;padding-left:15px;width:284px;}
+#tt_captChaBottom .wrap_captcha_inner input {font:12px/18px dotum;border:1px solid;border-top-color:#afafaf;border-bottom-color:#e9e9e9;border-left-color:#e6e6e6;border-right-color:#e6e6e6;width:166px;height:20px;float:left;padding:2px 3px 0 5px;}
+#tt_captChaBottom .wrap_captcha_inner .btn_refresh {float:left;margin-left:6px;width:58px;height:22px;opacity:0.25;filter:alpha(opacity=25);cursor:pointer;}
+#tt_captChaBottom .wrap_captcha_inner .wrap_btn_bg {position:relative;width:58px;height:22px;opacity:0.40;filter:alpha(opacity=10);}
+#tt_captChaBottom #textRefresh {float:left;position:relative;display:inline;margin:0;width:42px;font:11px dotum;cursor:pointer;letter-spacing:-1px;}
+#tt_captChaBottom .wrap_captcha_notice {clear:both;padding-top:11px;font:11px dotum;letter-spacing:-1px;display:inline-block;}
+
+/* box type */
+#tt_captChaBox {z-index:99;position:absolute;width:206px;height:188px;padding:23px 13px 0 21px;font:11px dotum;letter-spacing:-1px;background:url(//t1.daumcdn.net/tistory_admin/static/images/bg_pictorial.gif) no-repeat;}
+#tt_captChaBox #imageCaptcha {width:198px;height:50px;}
+#tt_captChaBox .wrap_captcha_notice {margin:12px 0 17px -2px;color:#444;}
+#tt_captChaBox .wrap_captcha_inner {margin-left:-1px;}
+#tt_captChaBox .wrap_captcha_inner input {border:1px solid;border-top-color:#afafaf;border-bottom-color:#e9e9e9;border-left-color:#e6e6e6;border-right-color:#e6e6e6;width:130px;height:18px;float:left;margin-right:5px;padding:2px 3px;}
+#tt_captChaBox .wrap_captcha_inner .btn_refresh {cursor:pointer;}

@@ -1,0 +1,22 @@
+#livereAd .lv-ad-top-vertical-1 {
+    padding: 0 100px 0 100px;
+}
+
+@media screen and (min-width: 0px) and (max-width: 650px) {
+    #livereAd .lv-ad-top-horizontal-1 {
+        margin-right: -2px;
+    }
+
+    #livereAd .lv-ad-top-horizontal-2 {
+        margin-left: -2px;
+    }
+}
+
+@media screen and (min-width: 651px) {
+    #livereAd .lv-ad-top-horizontal-1 {
+        margin-right: 15px;
+    }
+    #livereAd .lv-ad-top-horizontal-2 {
+        margin-left: 15px;
+    }
+}

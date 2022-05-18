@@ -1,0 +1,60 @@
+﻿@charset "UTF-8";
+
+code {
+    /*border: 5px solid #9280ff;*/
+	border: 2px solid #e9e9e9;
+}
+
+.hljs-ln-numbers {
+    text-align: right;
+    border-right: 1px solid #ccc;
+    color: #999;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.hljs-ln-code .hljs-ln-line {
+    margin-left: 10px;
+    font-size: 10pt;
+    white-space: pre-wrap;
+	line-height:15px;
+}
+
+.hljs-ln-numbers .hljs-ln-line {
+    margin-right: 10px;
+    font-size: 10pt;
+	line-height:15px;
+}
+
+.code-title {
+    /*background-color: #9280ff;*/
+	background-color: #e9e9e9;
+    padding-left: 10px;
+    padding-top: 5px;
+    /*color: white;*/
+	color:black;
+    font-weight: 800;
+}
+
+@media screen and (max-width: 767px) {
+    .hljs-ln-code .hljs-ln-line {
+        font-size: 7pt;
+    }
+
+    .hljs-ln-numbers .hljs-ln-line {
+        font-size: 7pt;
+    }
+}
+/*
+.hljs-meta {
+    color: #5cb85c!important;
+}
+
+.hljs-comment{
+    color: #008000;!important
+}
+*/
