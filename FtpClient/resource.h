@@ -1,6 +1,6 @@
 ﻿//{{NO_DEPENDENCIES}}
-// Microsoft Visual C++에서 생성한 포함 파일입니다.
-// FtpClient.rc에서 사용되고 있습니다.
+// Microsoft Visual C++ generated include file.
+// Used by FtpClient.rc
 //
 #define IDD_FTPCLIENT_DIALOG            102
 #define IDD_DLG_DISPLAY                 103
@@ -27,8 +27,12 @@
 #define IDC_STATIC_USER_ID              1019
 #define IDC_STATIC_USER_PASS            1020
 #define IDC_STATIC_DISPLAY              1021
-#define IDC_BUTTON_SAVE                 1021
-#define IDC_LIST_WIFI_LIST              1022
+#define IDC_BUTTON_DOWN_ALL_FILE        1021
+#define IDC_COMBO_FTP_PATH              1022
+#define IDC_RADIO_IMAGE                 1023
+#define IDC_RADIO2                      1024
+#define IDC_RADIO_TEXT                  1024
+#define IDC_EDIT_LAST_WRTIE_TIME_IMAGE  1025
 
 // Next default values for new objects
 // 
@@ -36,7 +40,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        131
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1023
+#define _APS_NEXT_CONTROL_VALUE         1026
 #define _APS_NEXT_SYMED_VALUE           104
 #endif
 #endif

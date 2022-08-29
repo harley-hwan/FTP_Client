@@ -8,24 +8,45 @@ using namespace std;
 class CFtpFileInfo
 {
 protected:
+	int m_iFtpPathType;
 	CTime m_tmLastWrite;
 	CString m_strName;
 	CString m_strPath;
 
 public:
-	CFtpFileInfo(CTime tmLastWrite, CString strName, CString strPath)
-		: m_tmLastWrite(tmLastWrite)
+	CFtpFileInfo(int iType, CTime tmLastWrite, CString strName, CString strPath)
+		: m_iFtpPathType(iType)
+		, m_tmLastWrite(tmLastWrite)
 		, m_strName(strName)
 		, m_strPath(strPath)
 		{}
 
+	int GetFtpPathType() { return m_iFtpPathType; }
 	CTime GetLastWriteTime() { return m_tmLastWrite; }
 	CString GetFileName() { return m_strName; }
+	CString GetFileNameExceptExt()
+	{
+		CString strExt = PathFindExtension(m_strName);
+		CString strName = m_strName;
+		strName.Replace(strExt, _T(""));
+		return strName;
+	}
+	CString GetFileExt() { return PathFindExtension(m_strName); }
 	CString GetFilePath() { return m_strPath; }
 	CString GetFilePathName() {
 		CString strPathName;
 		strPathName.Format(_T("%s/%s"), m_strPath, m_strName);
-		return strPathName; }
+		return strPathName;
+	}
+	CString GetFileDownPathName() {
+		CString strPathName;
+		if (m_iFtpPathType == 3) // ShotDB
+			strPathName.Format(_T("/Result/%s.jpg"), GetFileNameExceptExt());
+		else
+			strPathName = GetFilePathName();
+
+		return strPathName;
+	}
 };
 
 class CFtpInterface
@@ -35,6 +56,8 @@ public:
 	~CFtpInterface();
 
 protected:
+	void *m_pOwner;
+
 	CInternetSession* m_pSession;
 	CFtpConnection* m_pFtp;
 
@@ -75,7 +98,7 @@ public:
 	BOOL SetCurrentDir(CString strDirectory);
 
 	// 현재 경로 파일목록(파일)을 구하기
-	BOOL GetFtpFileList(CPtrArray& arrFileList);
+	BOOL GetFtpFileList(CPtrArray& arrFileList, BOOL bFileAll = FALSE);
 
 	// 다운로드
 	BOOL DownloadFile(CString strFtpFilePath, CString strLocalPath);
@@ -91,4 +114,7 @@ public:
 	BOOL IsFtpFileTransferring();
 	// 실행 파일 현재 경로 얻기
 	CString GetCurrentModulePath();
+
+public:
+	void SetOwner(void *pOwner);
 };

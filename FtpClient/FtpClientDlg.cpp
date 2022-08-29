@@ -25,6 +25,10 @@ CFtpClientDlg::CFtpClientDlg(CWnd* pParent /*=nullptr*/)
 	m_pThreadLastImage = NULL;
 	m_bFlagLastImage = FALSE;
 	m_pDlgDisplay = NULL;
+	m_iFtpShowFileType = 0;
+	m_iListCtrlFileType = 0;
+
+	m_ftp.SetOwner(this);
 }
 
 CFtpClientDlg::~CFtpClientDlg()
@@ -61,9 +65,12 @@ void CFtpClientDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT_FTP_PORT, m_edFtpPort);
 	DDX_Control(pDX, IDC_EDIT_FTP_ID, m_edFtpID);
 	DDX_Control(pDX, IDC_EDIT_FTP_PASS, m_edFtpPass);
-	DDX_Control(pDX, IDC_EDIT_FTP_PATH, m_edFtpPath);
+	//DDX_Control(pDX, IDC_EDIT_FTP_PATH, m_edFtpPath);
 	DDX_Control(pDX, IDC_LIST_FILE_LIST, m_lcFileList);
-	DDX_Control(pDX, IDC_STATIC_LAST_WRTIE_TIME_IMAGE, m_Image);
+	DDX_Control(pDX, IDC_STATIC_LAST_WRTIE_TIME_IMAGE, m_stDispImage);
+	DDX_Control(pDX, IDC_COMBO_FTP_PATH, m_cbFtpPath);
+	DDX_Control(pDX, IDC_RADIO_IMAGE, m_rdImage);
+	DDX_Control(pDX, IDC_EDIT_LAST_WRTIE_TIME_IMAGE, m_edDispText);
 }
 
 BEGIN_MESSAGE_MAP(CFtpClientDlg, CDialogEx)
@@ -73,14 +80,17 @@ BEGIN_MESSAGE_MAP(CFtpClientDlg, CDialogEx)
 	ON_BN_CLICKED(IDCANCEL, &CFtpClientDlg::OnBnClickedCancel)
 	ON_WM_DESTROY()
 	ON_BN_CLICKED(IDC_BUTTON_FTP_CONN, &CFtpClientDlg::OnBnClickedButtonFtpConn)
-	ON_BN_CLICKED(IDC_BUTTON_GET_LAST_IMAGE, &CFtpClientDlg::OnBnClickedButtonGetLastImage)
+	ON_BN_CLICKED(IDC_BUTTON_GET_LAST_IMAGE, &CFtpClientDlg::OnBnClickedButtonGetLastFile)
 	ON_BN_CLICKED(IDC_BUTTON_FTP_DISCONN, &CFtpClientDlg::OnBnClickedButtonFtpDisconn)
-	ON_WM_TIMER()
 	ON_BN_CLICKED(IDC_BUTTON_START_THREAD, &CFtpClientDlg::OnBnClickedButtonStartThread)
 	ON_BN_CLICKED(IDC_BUTTON_END_THREAD, &CFtpClientDlg::OnBnClickedButtonEndThread)
 	ON_WM_SIZE()
-	ON_NOTIFY(NM_CLICK, IDC_LIST_FILE_LIST, &CFtpClientDlg::OnNMClickListFileList)
 	ON_STN_DBLCLK(IDC_STATIC_LAST_WRTIE_TIME_IMAGE, &CFtpClientDlg::OnStnDblclickStaticLastWrtieTimeImage)
+	ON_CONTROL_RANGE(BN_CLICKED, IDC_RADIO_IMAGE, IDC_RADIO_TEXT, &CFtpClientDlg::OnBnClickedRadio)
+	ON_BN_CLICKED(IDC_BUTTON_DOWN_ALL_FILE, &CFtpClientDlg::OnBnClickedButtonDownAllFile)
+	//ON_NOTIFY(NM_CLICK, IDC_LIST_FILE_LIST, &CFtpClientDlg::OnNMClickListFileList)
+	ON_NOTIFY(LVN_ITEMCHANGED, IDC_LIST_FILE_LIST, &CFtpClientDlg::OnLvnItemchangedListFileList)
+	ON_CBN_SELCHANGE(IDC_COMBO_FTP_PATH, &CFtpClientDlg::OnCbnSelchangeComboFtpPath)
 END_MESSAGE_MAP()
 
 
@@ -155,15 +165,26 @@ void CFtpClientDlg::InitDialog()
 	m_edFtpPort.SetWindowText(_T("3999"));
 	m_edFtpID.SetWindowText(_T("dbgftp"));
 	m_edFtpPass.SetWindowText(_T("gradar"));
-	m_edFtpPath.SetWindowText(_T("/Result"));
+	m_cbFtpPath.InsertString(0, _T("/Result"));
+	m_cbFtpPath.InsertString(1, _T("/Log"));
+	m_cbFtpPath.InsertString(2, _T("/BT_Log"));
+	m_cbFtpPath.InsertString(3, _T("/ShotDB"));
+
+	m_cbFtpPath.SetCurSel(GetFtpPathFromConfig());
 
 	m_lcFileList.SetExtendedStyle(/*LVS_EX_GRIDLINES | */LVS_EX_FULLROWSELECT); // 리스트 스타일
 	m_lcFileList.InsertColumn(0, _T("Time"), LVCFMT_CENTER, 150);
 	m_lcFileList.InsertColumn(1, _T("File Name"), LVCFMT_CENTER, 250);
 
+	m_iFtpShowFileType = 0;
+	m_rdImage.SetCheck(TRUE);
+	ShowControlByFileType(m_iFtpShowFileType);
+
 	RemoveFileList();
 
 	MoveControl();
+
+	InitEnableControl();
 }
 
 void CFtpClientDlg::RemoveFileList()
@@ -203,6 +224,16 @@ void CFtpClientDlg::DisplayFileList()
 	m_lcFileList.SetRedraw(TRUE);
 }
 
+void CFtpClientDlg::DisplayLastFile(int iFileType)
+{
+	if (iFileType == 0)
+		DisplayLastWriteImage();
+	else if (iFileType == 1)
+		DisplayLastWriteText();
+	else
+		TRACE(_T("Unknown File Type(%d)\n"), iFileType);
+}
+
 void CFtpClientDlg::DisplayLastWriteImage()
 {
 	int iCount = m_lcFileList.GetItemCount();
@@ -214,7 +245,7 @@ void CFtpClientDlg::DisplayLastWriteImage()
 		if (pFileInfo == NULL)
 			AfxMessageBox(_T("Data Load Fail"));
 
-		CString strFilePathName = pFileInfo->GetFilePathName();
+		CString strFilePathName = pFileInfo->GetFileDownPathName();
 		CString strLocalPathName;
 		strLocalPathName.Format(_T(".\\%s"), pFileInfo->GetFileName());
 		BOOL bDown = m_ftp.DownloadFile(strFilePathName, strLocalPathName);
@@ -228,8 +259,8 @@ void CFtpClientDlg::DisplayLastWriteImage()
 			if (SUCCEEDED(hr))
 			{
 				CRect rect;
-				m_Image.GetWindowRect(&rect); // 컨트롤 크기 얻기
-				CDC *pDc = m_Image.GetDC();
+				m_stDispImage.GetWindowRect(&rect); // 컨트롤 크기 얻기
+				CDC *pDc = m_stDispImage.GetDC();
 				::SetStretchBltMode(*pDc, HALFTONE); // HALFTONE모드로 설정해서 크기 축소로 인한 이미지 깨짐 현상 최소화
 				m_imgDisplay.Draw(*pDc, 0, 0, rect.Width(), rect.Height(), 0, 0, m_imgDisplay.GetWidth(), m_imgDisplay.GetHeight() );
 				
@@ -242,6 +273,194 @@ void CFtpClientDlg::DisplayLastWriteImage()
 		else
 			AfxMessageBox(_T("파일 다운로드 실패"));
 	}
+}
+
+void CFtpClientDlg::DisplayLastWriteText()
+{
+	int iCount = m_lcFileList.GetItemCount();
+	if (0 < iCount)
+	{
+		CSingleLock cr(&m_cr);
+		cr.Lock();
+		CFtpFileInfo *pFileInfo = (CFtpFileInfo *)m_lcFileList.GetItemData(0);
+		if (pFileInfo == NULL)
+			AfxMessageBox(_T("Data Load Fail"));
+
+		CString strFilePathName = pFileInfo->GetFileDownPathName();
+		CString strLocalPathName;
+		strLocalPathName.Format(_T(".\\%s"), pFileInfo->GetFileName());
+		BOOL bDown = m_ftp.DownloadFile(strFilePathName, strLocalPathName);
+		if (bDown)
+		{
+			CString strLocalPathName;
+			strLocalPathName.Format(_T(".\\%s"), pFileInfo->GetFileName());
+			if (m_fileText.m_hFile != CStdioFile::hFileNull)
+				m_fileText.Close();
+			BOOL bOpen = m_fileText.Open(strLocalPathName,
+										 CStdioFile::modeNoTruncate |
+										 CStdioFile::typeText |
+										 CStdioFile::modeReadWrite |
+										 CStdioFile::shareDenyNone);
+			if (bOpen)
+			{
+				CString strTotal(_T("")), strRead(_T(""));
+				while (m_fileText.ReadString(strRead))
+					strTotal += strRead + _T("\r\n");
+				m_edDispText.SetWindowText(strTotal);
+				m_fileText.Close();
+
+				DeleteFile(strLocalPathName);
+			}
+			else
+				AfxMessageBox(_T("Text File Load Fail"));
+		}
+		else
+			AfxMessageBox(_T("파일 다운로드 실패"));
+	}
+}
+
+void CFtpClientDlg::InitEnableControl()
+{
+	GetDlgItem(IDC_IPADDRESS_FTP)->EnableWindow(TRUE);
+	GetDlgItem(IDC_EDIT_FTP_PORT)->EnableWindow(TRUE);
+	GetDlgItem(IDC_EDIT_FTP_PATH)->EnableWindow(TRUE);
+	GetDlgItem(IDC_COMBO_FTP_PATH)->EnableWindow(TRUE);
+	GetDlgItem(IDC_EDIT_FTP_ID)->EnableWindow(TRUE);
+	GetDlgItem(IDC_EDIT_FTP_PASS)->EnableWindow(TRUE);
+
+	GetDlgItem(IDC_BUTTON_FTP_CONN)->EnableWindow(TRUE);
+	GetDlgItem(IDC_BUTTON_FTP_DISCONN)->EnableWindow(FALSE);
+	GetDlgItem(IDC_BUTTON_GET_LAST_IMAGE)->EnableWindow(FALSE);
+	GetDlgItem(IDC_BUTTON_START_THREAD)->EnableWindow(FALSE);
+	GetDlgItem(IDC_BUTTON_END_THREAD)->EnableWindow(FALSE);
+	GetDlgItem(IDC_BUTTON_DOWN_ALL_FILE)->EnableWindow(FALSE);
+
+	GetDlgItem(IDC_RADIO_IMAGE)->EnableWindow(TRUE);
+	GetDlgItem(IDC_RADIO_TEXT)->EnableWindow(TRUE);
+}
+
+void CFtpClientDlg::LoginEnableControl(BOOL bLogin)
+{
+	if (bLogin)
+	{
+		GetDlgItem(IDC_IPADDRESS_FTP)->EnableWindow(FALSE);
+		GetDlgItem(IDC_EDIT_FTP_PORT)->EnableWindow(FALSE);
+		GetDlgItem(IDC_EDIT_FTP_PATH)->EnableWindow(FALSE);
+		GetDlgItem(IDC_COMBO_FTP_PATH)->EnableWindow(TRUE);
+		GetDlgItem(IDC_EDIT_FTP_ID)->EnableWindow(FALSE);
+		GetDlgItem(IDC_EDIT_FTP_PASS)->EnableWindow(FALSE);
+
+		GetDlgItem(IDC_BUTTON_FTP_CONN)->EnableWindow(FALSE);
+		GetDlgItem(IDC_BUTTON_FTP_DISCONN)->EnableWindow(TRUE);
+		GetDlgItem(IDC_BUTTON_GET_LAST_IMAGE)->EnableWindow(TRUE);
+		GetDlgItem(IDC_BUTTON_START_THREAD)->EnableWindow(!m_bFlagLastImage);
+		GetDlgItem(IDC_BUTTON_END_THREAD)->EnableWindow(m_bFlagLastImage);
+		GetDlgItem(IDC_BUTTON_DOWN_ALL_FILE)->EnableWindow(TRUE);
+
+		GetDlgItem(IDC_RADIO_IMAGE)->EnableWindow(TRUE);
+		if (m_cbFtpPath.GetCurSel() == 3)
+			GetDlgItem(IDC_RADIO_TEXT)->EnableWindow(FALSE);
+		else
+			GetDlgItem(IDC_RADIO_TEXT)->EnableWindow(TRUE);
+	}
+	else
+	{
+		GetDlgItem(IDC_IPADDRESS_FTP)->EnableWindow(TRUE);
+		GetDlgItem(IDC_EDIT_FTP_PORT)->EnableWindow(TRUE);
+		GetDlgItem(IDC_EDIT_FTP_PATH)->EnableWindow(TRUE);
+		GetDlgItem(IDC_COMBO_FTP_PATH)->EnableWindow(TRUE);
+		GetDlgItem(IDC_EDIT_FTP_ID)->EnableWindow(TRUE);
+		GetDlgItem(IDC_EDIT_FTP_PASS)->EnableWindow(TRUE);
+
+		GetDlgItem(IDC_BUTTON_FTP_CONN)->EnableWindow(TRUE);
+		GetDlgItem(IDC_BUTTON_FTP_DISCONN)->EnableWindow(FALSE);
+		GetDlgItem(IDC_BUTTON_GET_LAST_IMAGE)->EnableWindow(FALSE);
+		GetDlgItem(IDC_BUTTON_START_THREAD)->EnableWindow(FALSE);
+		GetDlgItem(IDC_BUTTON_END_THREAD)->EnableWindow(FALSE);
+		GetDlgItem(IDC_BUTTON_DOWN_ALL_FILE)->EnableWindow(FALSE);
+
+		GetDlgItem(IDC_RADIO_IMAGE)->EnableWindow(TRUE);
+		GetDlgItem(IDC_RADIO_TEXT)->EnableWindow(TRUE);
+	}
+}
+
+void CFtpClientDlg::ThreadEnableControl(BOOL bStart)
+{
+	if (bStart)
+	{
+		GetDlgItem(IDC_IPADDRESS_FTP)->EnableWindow(FALSE);
+		GetDlgItem(IDC_EDIT_FTP_PORT)->EnableWindow(FALSE);
+		GetDlgItem(IDC_EDIT_FTP_PATH)->EnableWindow(FALSE);
+		GetDlgItem(IDC_COMBO_FTP_PATH)->EnableWindow(FALSE);
+		GetDlgItem(IDC_EDIT_FTP_ID)->EnableWindow(FALSE);
+		GetDlgItem(IDC_EDIT_FTP_PASS)->EnableWindow(FALSE);
+
+		GetDlgItem(IDC_BUTTON_FTP_CONN)->EnableWindow(FALSE);
+		GetDlgItem(IDC_BUTTON_FTP_DISCONN)->EnableWindow(FALSE);
+		GetDlgItem(IDC_BUTTON_GET_LAST_IMAGE)->EnableWindow(FALSE);
+		GetDlgItem(IDC_BUTTON_START_THREAD)->EnableWindow(FALSE);
+		GetDlgItem(IDC_BUTTON_END_THREAD)->EnableWindow(TRUE);
+		GetDlgItem(IDC_BUTTON_DOWN_ALL_FILE)->EnableWindow(FALSE);
+
+		GetDlgItem(IDC_RADIO_IMAGE)->EnableWindow(FALSE);
+		GetDlgItem(IDC_RADIO_TEXT)->EnableWindow(FALSE);
+	}
+	else
+		LoginEnableControl(m_ftp.IsConnected());
+}
+
+void CFtpClientDlg::RadioEnableControl(int iFileType)
+{
+	if (iFileType == 0)
+	{
+		ThreadEnableControl(m_bFlagLastImage);
+	}
+	else if (iFileType == 1)
+	{
+		GetDlgItem(IDC_BUTTON_START_THREAD)->EnableWindow(FALSE);
+		GetDlgItem(IDC_BUTTON_END_THREAD)->EnableWindow(FALSE);
+	}
+}
+
+void CFtpClientDlg::ShowControlByFileType(int iFileType)
+{
+	// 0: Image, 1: Text
+	if (iFileType == 0) 
+	{
+		m_stDispImage.ShowWindow(SW_SHOW);
+		m_edDispText.ShowWindow(SW_HIDE);
+	}
+	else
+	{
+		m_edDispText.SetWindowText(_T(""));
+		m_stDispImage.ShowWindow(SW_HIDE);
+		m_edDispText.ShowWindow(SW_SHOW);
+	}
+}
+
+int CFtpClientDlg::GetFtpPathType()
+{
+	return m_cbFtpPath.GetCurSel();
+}
+
+int CFtpClientDlg::GetFtpShowFileType()
+{
+	return m_iFtpShowFileType;
+}
+
+int CFtpClientDlg::GetFtpPathFromConfig()
+{
+	TCHAR atcRead[MAX_PATH] ={0,};
+	DWORD dwReadSize = GetPrivateProfileString(SECTION_CONFIG, KEY_FTP_PATH, _T("0"), atcRead, sizeof(atcRead), FILE_NAME_PATH);
+	int iFtpPath = _ttoi(atcRead);
+	return iFtpPath;
+}
+
+void CFtpClientDlg::SetFtpPathToConfig(int iIndex)
+{
+	CString strFtpPath(_T(""));
+	strFtpPath.Format(_T("%d"), iIndex);
+	WritePrivateProfileString(SECTION_CONFIG, KEY_FTP_PATH, strFtpPath, FILE_NAME_PATH);
 }
 
 int CFtpClientDlg::SetFileInfoToList(int iIndex, CFtpFileInfo * pFileInfo)
@@ -265,38 +484,44 @@ int CFtpClientDlg::SetFileInfoToList(int iIndex, CFtpFileInfo * pFileInfo)
 
 void CFtpClientDlg::MoveControl()
 {
-    //GROUPBOX        "WiFi List",IDC_STATIC_GROUP_WIFI,7,7,157,206
-    //GROUPBOX        "FTP Info",IDC_STATIC_GROUP_FTP,7,217,157,93
-    //RTEXT           "Server IP : ",IDC_STATIC_IP,12,226,59,14,SS_CENTERIMAGE
-    //CONTROL         "",IDC_IPADDRESS_FTP,"SysIPAddress32",WS_TABSTOP,72,226,87,15
-    //RTEXT           "Port No : ",IDC_STATIC_PORT,12,242,59,14,SS_CENTERIMAGE
-    //EDITTEXT        IDC_EDIT_FTP_PORT,72,242,87,14,ES_AUTOHSCROLL
-    //RTEXT           "FTP Path : ",IDC_STATIC_PATH,12,258,59,14,SS_CENTERIMAGE
-    //EDITTEXT        IDC_EDIT_FTP_PATH,72,258,87,14,ES_AUTOHSCROLL
-    //RTEXT           "User ID : ",IDC_STATIC_USER_ID,12,274,59,14,SS_CENTERIMAGE
-    //EDITTEXT        IDC_EDIT_FTP_ID,72,274,87,14,ES_AUTOHSCROLL
-    //RTEXT           "User Password : ",IDC_STATIC_USER_PASS,12,290,59,14,SS_CENTERIMAGE
-    //EDITTEXT        IDC_EDIT_FTP_PASS,72,291,87,14,ES_AUTOHSCROLL
-    //PUSHBUTTON      "Login",IDC_BUTTON_FTP_CONN,7,318,45,14
-    //PUSHBUTTON      "Logout",IDC_BUTTON_FTP_DISCONN,55,318,45,14
+    //GROUPBOX        "WiFi List",IDC_STATIC_GROUP_WIFI,7,7,157,185
+    //GROUPBOX        "FTP Info",IDC_STATIC_GROUP_FTP,7,196,157,118
+    //RTEXT           "Server IP : ",IDC_STATIC_IP,12,208,59,14,SS_CENTERIMAGE
+    //CONTROL         "",IDC_IPADDRESS_FTP,"SysIPAddress32",WS_TABSTOP,78,208,79,15
+    //RTEXT           "Port No : ",IDC_STATIC_PORT,12,224,59,14,SS_CENTERIMAGE
+    //EDITTEXT        IDC_EDIT_FTP_PORT,78,224,79,14,ES_AUTOHSCROLL
+    //RTEXT           "FTP Path : ",IDC_STATIC_PATH,12,240,59,14,SS_CENTERIMAGE
+    //EDITTEXT        IDC_EDIT_FTP_PATH,147,258,24,14,ES_AUTOHSCROLL | NOT WS_VISIBLE
+    //RTEXT           "User ID : ",IDC_STATIC_USER_ID,12,256,59,14,SS_CENTERIMAGE
+    //EDITTEXT        IDC_EDIT_FTP_ID,78,256,79,14,ES_AUTOHSCROLL
+    //RTEXT           "User Password : ",IDC_STATIC_USER_PASS,13,272,56,14,SS_CENTERIMAGE
+    //EDITTEXT        IDC_EDIT_FTP_PASS,78,273,79,14,ES_AUTOHSCROLL
+    //PUSHBUTTON      "Login",IDC_BUTTON_FTP_CONN,7,319,45,14
+    //PUSHBUTTON      "Logout",IDC_BUTTON_FTP_DISCONN,55,319,45,14
     //GROUPBOX        "File List",IDC_STATIC_GROUP_FILE_LIST,168,7,241,345
     //CONTROL         "",IDC_LIST_FILE_LIST,"SysListView32",LVS_REPORT | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,175,17,226,326
     //GROUPBOX        "Last Write Time Image",IDC_STATIC_GROUP_IMAGE,412,7,386,345
-    //CONTROL         "",IDC_STATIC_LAST_WRTIE_TIME_IMAGE,"Static",SS_BLACKFRAME | SS_CENTERIMAGE,420,19,372,322
-    //PUSHBUTTON      "최근 파일 표시",IDC_BUTTON_GET_LAST_IMAGE,107,318,45,14
+    //CONTROL         "",IDC_STATIC_LAST_WRTIE_TIME_IMAGE,"Static",SS_BLACKFRAME | SS_NOTIFY | SS_CENTERIMAGE,420,19,372,322
+    //PUSHBUTTON      "최근 파일 표시",IDC_BUTTON_GET_LAST_IMAGE,107,319,45,14
     //PUSHBUTTON      "수집 시작",IDC_BUTTON_START_THREAD,7,338,45,14
     //PUSHBUTTON      "수집 종료",IDC_BUTTON_END_THREAD,55,338,45,14
-
+    //COMBOBOX        IDC_COMBO_FTP_PATH,78,241,79,30,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    //CONTROL         "Image",IDC_RADIO_IMAGE,"Button",BS_AUTORADIOBUTTON | WS_GROUP,24,295,35,10
+    //CONTROL         "Text",IDC_RADIO_TEXT,"Button",BS_AUTORADIOBUTTON,84,293,31,10
+    //EDITTEXT        IDC_EDIT_LAST_WRTIE_TIME_IMAGE,419,19,68,58,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | NOT WS_VISIBLE | WS_VSCROLL
+    //PUSHBUTTON      "모든 파일 다운",IDC_BUTTON_DOWN_ALL_FILE,106,338,45,14
 	int iGap10 = 10, iGap5 = 5, iGap2 = 2;
 	CWnd *pBtnFtpCon = GetDlgItem(IDC_BUTTON_FTP_CONN);
 	CWnd *pBtnFtpDiscon = GetDlgItem(IDC_BUTTON_FTP_DISCONN);
     CWnd *pBtnGetImg = GetDlgItem(IDC_BUTTON_GET_LAST_IMAGE);
 	CWnd *pBtnStart = GetDlgItem(IDC_BUTTON_START_THREAD);
 	CWnd *pBtnEnd = GetDlgItem(IDC_BUTTON_END_THREAD);
+	CWnd *pBtnDownAllFile = GetDlgItem(IDC_BUTTON_DOWN_ALL_FILE);
 	CWnd *pGroupWifi = GetDlgItem(IDC_STATIC_GROUP_WIFI);
 	CWnd *pAddrFtpIP = GetDlgItem(IDC_IPADDRESS_FTP);
 	CWnd *pEdFtpPort = GetDlgItem(IDC_EDIT_FTP_PORT);
-	CWnd *pEdFtpPath = GetDlgItem(IDC_EDIT_FTP_PATH);
+	//CWnd *pEdFtpPath = GetDlgItem(IDC_EDIT_FTP_PATH);
+	CWnd *pCbFtpPath = GetDlgItem(IDC_COMBO_FTP_PATH);
 	CWnd *pEdFtpID = GetDlgItem(IDC_EDIT_FTP_ID);
 	CWnd *pEdFtpPass = GetDlgItem(IDC_EDIT_FTP_PASS);
 	CWnd *pGroupFtp = GetDlgItem(IDC_STATIC_GROUP_FTP);
@@ -309,6 +534,9 @@ void CFtpClientDlg::MoveControl()
 	CWnd *pStaticPass = GetDlgItem(IDC_STATIC_USER_PASS);
 	CWnd *pLcFile = GetDlgItem(IDC_LIST_FILE_LIST);
 	CWnd *pPcImage = GetDlgItem(IDC_STATIC_LAST_WRTIE_TIME_IMAGE);
+	CWnd *pedImage = GetDlgItem(IDC_EDIT_LAST_WRTIE_TIME_IMAGE);
+	CWnd *pRdImage = GetDlgItem(IDC_RADIO_IMAGE);
+	CWnd *pRdText = GetDlgItem(IDC_RADIO_TEXT);
 	
 	if (pBtnStart == NULL || pBtnStart->GetSafeHwnd() == NULL ||
 		pBtnFtpCon == NULL || pBtnFtpCon->GetSafeHwnd() == NULL ||
@@ -316,10 +544,11 @@ void CFtpClientDlg::MoveControl()
 		pBtnGetImg == NULL || pBtnGetImg->GetSafeHwnd() == NULL ||
 		pBtnStart == NULL || pBtnStart->GetSafeHwnd() == NULL ||		
 		pBtnEnd == NULL || pBtnEnd->GetSafeHwnd() == NULL ||
+		pBtnDownAllFile == NULL || pBtnDownAllFile->GetSafeHwnd() == NULL ||
 		pGroupWifi == NULL || pGroupWifi->GetSafeHwnd() == NULL ||
 		pAddrFtpIP == NULL || pAddrFtpIP->GetSafeHwnd() == NULL ||
 		pEdFtpPort == NULL || pEdFtpPort->GetSafeHwnd() == NULL ||
-		pEdFtpPath == NULL || pEdFtpPath->GetSafeHwnd() == NULL ||
+		pCbFtpPath == NULL || pCbFtpPath->GetSafeHwnd() == NULL ||
 		pEdFtpID == NULL || pEdFtpID->GetSafeHwnd() == NULL ||
 		pEdFtpPass == NULL || pEdFtpPass->GetSafeHwnd() == NULL ||
 		pGroupFtp == NULL || pGroupFtp->GetSafeHwnd() == NULL ||
@@ -332,6 +561,9 @@ void CFtpClientDlg::MoveControl()
 		pStaticPass == NULL || pStaticPass->GetSafeHwnd() == NULL ||
 		pLcFile == NULL || pLcFile->GetSafeHwnd() == NULL ||
 		pPcImage == NULL || pPcImage->GetSafeHwnd() == NULL ||
+		pedImage == NULL || pedImage->GetSafeHwnd() == NULL ||
+		pRdImage == NULL || pRdImage->GetSafeHwnd() == NULL ||
+		pRdText == NULL || pRdText->GetSafeHwnd() == NULL ||
 		false)
 		return;
 
@@ -365,6 +597,20 @@ void CFtpClientDlg::MoveControl()
 						  SWP_NOACTIVATE | SWP_NOZORDER);
 	pBtnEnd->GetWindowRect(rcBtnEnd);
 	ScreenToClient(rcBtnEnd);
+
+	// 모든 파일 다운로드 버튼
+	CRect rcBtnDownAll;
+	pBtnDownAllFile->GetWindowRect(rcBtnDownAll);
+	ScreenToClient(rcBtnDownAll);
+	pBtnDownAllFile->SetWindowPos(NULL,
+								  rcBtnEnd.right + iGap10,
+								  rcBtnStart.top,
+								  rcBtnDownAll.Width(),
+								  rcBtnDownAll.Height(),
+								  SWP_NOACTIVATE | SWP_NOZORDER);
+	pBtnDownAllFile->GetWindowRect(rcBtnDownAll);
+	ScreenToClient(rcBtnDownAll);
+
 	
 	// login
 	CRect rcBtnConn;
@@ -524,15 +770,15 @@ void CFtpClientDlg::MoveControl()
 	
 	// PATH
 	CRect rcPath;
-	pEdFtpPath->GetWindowRect(rcPath);
+	pCbFtpPath->GetWindowRect(rcPath);
 	ScreenToClient(rcPath);
-	pEdFtpPath->SetWindowPos(NULL,
+	pCbFtpPath->SetWindowPos(NULL,
 							 rcIP.left,
 							 rcStaticPath.top,
 							 rcPath.Width(),
 							 rcPath.Height(),
 							 SWP_NOACTIVATE | SWP_NOZORDER);
-	pEdFtpPath->GetWindowRect(rcPath);
+	pCbFtpPath->GetWindowRect(rcPath);
 	ScreenToClient(rcPath);
 
 	// ID
@@ -560,6 +806,32 @@ void CFtpClientDlg::MoveControl()
 							 SWP_NOACTIVATE | SWP_NOZORDER);
 	pEdFtpPass->GetWindowRect(rcPass);
 	ScreenToClient(rcPass);
+
+	// Radio Image
+	CRect rcRadioImage;
+	pRdImage->GetWindowRect(rcRadioImage);
+	ScreenToClient(rcRadioImage);
+	pRdImage->SetWindowPos(NULL,
+						   rcIP.left,
+						   rcStaticPass.bottom + iGap5,
+						   rcRadioImage.Width(),
+						   rcRadioImage.Height(),
+						   SWP_NOACTIVATE | SWP_NOZORDER);
+	pRdImage->GetWindowRect(rcRadioImage);
+	ScreenToClient(rcRadioImage);
+
+	// Radio Text
+	CRect rcRadioText;
+	pRdText->GetWindowRect(rcRadioText);
+	ScreenToClient(rcRadioText);
+	pRdText->SetWindowPos(NULL,
+						  rcRadioImage.right + iGap10,
+						  rcRadioImage.top,
+						  rcRadioText.Width(),
+						  rcRadioText.Height(),
+						  SWP_NOACTIVATE | SWP_NOZORDER);
+	pRdText->GetWindowRect(rcRadioText);
+	ScreenToClient(rcRadioText);
 
 	// File List
 	CRect rcGroupFileList;
@@ -613,6 +885,20 @@ void CFtpClientDlg::MoveControl()
 	pPcImage->GetWindowRect(rcImage);
 	ScreenToClient(rcImage);
 
+	// Text
+	CRect rcText;
+	pedImage->GetWindowRect(rcText);
+	ScreenToClient(rcText);
+	pedImage->SetWindowPos(NULL,
+						   rcGroupImage.left + iGap10,
+						   rcGroupImage.top + iGap10*2,
+						   rcGroupImage.Width() - iGap10*2,
+						   rcGroupImage.Height() - iGap10*3,
+						   SWP_NOACTIVATE | SWP_NOZORDER);
+	pedImage->GetWindowRect(rcText);
+	ScreenToClient(rcText);
+	
+
 	// invalidate
 	pBtnFtpCon->Invalidate();
 	pBtnFtpDiscon->Invalidate();
@@ -622,7 +908,7 @@ void CFtpClientDlg::MoveControl()
 	pGroupWifi->Invalidate();
 	pAddrFtpIP->Invalidate();
 	pEdFtpPort->Invalidate();
-	pEdFtpPath->Invalidate();
+	pCbFtpPath->Invalidate();
 	pEdFtpID->Invalidate();
 	pEdFtpPass->Invalidate();
 	pGroupFtp->Invalidate();
@@ -635,6 +921,9 @@ void CFtpClientDlg::MoveControl()
 	pStaticPass->Invalidate();
 	pLcFile->Invalidate();
 	pPcImage->Invalidate();
+	pedImage->Invalidate();
+	pRdImage->Invalidate();
+	pRdText->Invalidate();
 
 	pGroupFtp->ShowWindow(SW_SHOW);
 }
@@ -659,13 +948,17 @@ void CFtpClientDlg::OnBnClickedButtonFtpConn()
 
 	m_ctrlFtpIP.GetWindowText(strFtpIP);
 	m_edFtpPort.GetWindowText(strFtpPort);
-	m_edFtpPath.GetWindowText(strFtpPath);
+	//m_edFtpPath.GetWindowText(strFtpPath);
+	m_cbFtpPath.GetWindowText(strFtpPath);
+	m_cbFtpPath.GetWindowText(strFtpPath);
 	m_edFtpID.GetWindowText(strFtpID);
 	m_edFtpPass.GetWindowText(strFtpPass);
 
 	// 로그인 되어있으면 로그아웃
 	if (m_ftp.IsConnected())
+	{
 		m_ftp.Logout();
+	}
 
 	// 로그인 시도
 	BOOL bRes = m_ftp.Login(strFtpIP, strFtpID, strFtpPass, _ttoi(strFtpPort));
@@ -681,7 +974,7 @@ void CFtpClientDlg::OnBnClickedButtonFtpConn()
 		AfxMessageBox(strMsg);
 		return;
 	}
-	
+
 	AfxMessageBox(_T("로그인 되었습니다."));
 
 	// 경로 설정
@@ -704,11 +997,12 @@ void CFtpClientDlg::OnBnClickedButtonFtpDisconn()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	// 로그인 되어있으면 로그아웃
-	if (m_ftp.IsConnected())
-		m_ftp.Logout();
+	//if (m_ftp.IsConnected())
+	//	m_ftp.Logout();
+	m_ftp.Logout();
 }
 
-void CFtpClientDlg::OnBnClickedButtonGetLastImage()
+void CFtpClientDlg::OnBnClickedButtonGetLastFile()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	// 로그인 되어있으면 로그아웃
@@ -717,7 +1011,7 @@ void CFtpClientDlg::OnBnClickedButtonGetLastImage()
 
 	// 경로 설정
 	CString strFtpPath(_T(""));
-	m_edFtpPath.GetWindowText(strFtpPath);
+	m_cbFtpPath.GetWindowText(strFtpPath);
 	BOOL bRes = m_ftp.SetCurrentDir(strFtpPath);
 	if (!bRes)
 	{
@@ -748,20 +1042,35 @@ void CFtpClientDlg::OnBnClickedButtonGetLastImage()
 		return;
 	}
 
+	if (m_arrFileList.GetCount() <= 0)
+	{
+		AfxMessageBox(_T("파일이 없습니다."));
+		return;
+	}
+
 	// 파일 리스트 화면에 표시
 	DisplayFileList();
 
-	// 가장 최근 이미지 파일 표시
-	DisplayLastWriteImage();
+	// 가장 최근 파일 표시
+	DisplayLastFile(m_iFtpShowFileType);
+
+	m_iListCtrlFileType = m_iFtpShowFileType;
 }
 
 void CFtpClientDlg::OnBnClickedButtonStartThread()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (m_iFtpShowFileType != 0)
+	{
+		AfxMessageBox(_T("Image 라디오 버튼 선택시만 가능합니다."));
+		return;
+	}
+
 	if (m_pThreadLastImage == NULL)
 	{
 		m_bFlagLastImage = TRUE;
 		m_pThreadLastImage = AfxBeginThread(ThreadLastImage, this);
+		ThreadEnableControl(m_bFlagLastImage);
 	}
 }
 
@@ -775,21 +1084,120 @@ void CFtpClientDlg::OnBnClickedButtonEndThread()
 		if (WaitForSingleObject(m_pThreadLastImage->m_hThread, INFINITE) != WAIT_OBJECT_0)
 			TerminateThread(m_pThreadLastImage->m_hThread, 0);
 		m_pThreadLastImage = NULL;
+		ThreadEnableControl(m_bFlagLastImage);
 	}
 }
 
-void CFtpClientDlg::OnTimer(UINT_PTR nIDEvent)
+
+void CFtpClientDlg::OnBnClickedRadio(UINT uiResID)
 {
-	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
-	switch (nIDEvent)
+	if (uiResID == IDC_RADIO_IMAGE)
 	{
-		case 1:
-			OnBnClickedButtonGetLastImage();
-			break;
+		m_iFtpShowFileType = 0;
 	}
-	CDialogEx::OnTimer(nIDEvent);
+	else if (uiResID == IDC_RADIO_TEXT)
+	{
+		if (m_bFlagLastImage == TRUE)
+		{
+			AfxMessageBox(_T("수집 중에는 라디오버튼을 변경할 수 없습니다."));
+			((CButton *)GetDlgItem(IDC_RADIO_TEXT))->SetCheck(FALSE);
+			return;
+		}
+		m_iFtpShowFileType = 1;
+	}
+	ShowControlByFileType(m_iFtpShowFileType);
+	RadioEnableControl(m_iFtpShowFileType);
 }
 
+void CFtpClientDlg::OnBnClickedButtonDownAllFile()
+{
+	if (m_bFlagLastImage == TRUE)
+	{
+		AfxMessageBox(_T("수집 중에는 다운로드할 수 없습니다."));
+		return;
+	}
+
+	// 경로 설정
+	CString strFtpPath(_T(""));
+	m_cbFtpPath.GetWindowText(strFtpPath);
+	BOOL bRes = m_ftp.SetCurrentDir(strFtpPath);
+	if (!bRes)
+	{
+		// 실패
+		DWORD dwRes;
+		CString strErr;
+		m_ftp.GetLastErrorMsg(dwRes, strErr);
+
+		CString strMsg;
+		strMsg.Format(_T("경로 설정 실패(%d, %s)"), dwRes, strMsg);
+		AfxMessageBox(strMsg);
+		return;
+	}
+
+	CString strDownDir = _T(".\\Download");
+	CString strDirType, strDownFullPath;
+	strDirType = strFtpPath;
+	strDirType.Replace(_T("/"), _T(""));
+	strDownFullPath.Format(_T("%s\\%s"), strDownDir, strDirType);
+
+	CString strReturn = _T("");
+	int iPos = 1;
+	BOOL bCreate = TRUE;
+	CString strCurrent(_T("."));
+	while (AfxExtractSubString(strReturn, strDownFullPath, iPos++, _T('\\')))
+	{
+		strCurrent += _T("\\") + strReturn;
+		if (!PathFileExists(strCurrent))
+		{
+			BOOL bCreateDir = CreateDirectory(strCurrent, NULL);
+			if (!bCreateDir)
+			{
+				bCreate = FALSE;
+				break;
+			}
+		}
+	}
+
+	if (!bCreate)
+	{
+		AfxMessageBox(_T("다운로드 폴더 생성 불가"));
+		return;
+	}
+
+	CSingleLock cr(&m_cr);
+	cr.Lock();
+	CPtrArray arrFileList; // FTP 파일 리스트 정보를 담는 클래스
+	bRes = m_ftp.GetFtpFileList(arrFileList, TRUE);
+	if (bRes)
+	{
+		int iCount = arrFileList.GetCount();
+		int iSuccess = 0, iFail = 0;
+		for (int iIndex = 0 ; iIndex < iCount ; iIndex++)
+		{
+			CFtpFileInfo *pFileInfo = (CFtpFileInfo *)arrFileList.GetAt(iIndex);
+			if (pFileInfo == NULL)
+				continue;
+
+			CString strFilePathName = pFileInfo->GetFilePathName();
+			CString strLocalPathName;
+			strLocalPathName.Format(_T("%s\\%s"), strDownFullPath, pFileInfo->GetFileName());
+			BOOL bDown = m_ftp.DownloadFile(strFilePathName, strLocalPathName);
+			if (bDown)
+				iSuccess++;
+			else
+				iFail++;
+
+			delete pFileInfo;
+			pFileInfo = NULL;
+		}
+
+		if (iCount == 0)
+			AfxMessageBox(_T("다운로드할 파일이 없습니다."));
+		else
+			AfxMessageBox(_T("다운로드 완료"));
+	}
+	arrFileList.RemoveAll();
+}
 
 int CFtpClientDlg::CompareTime(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort)
 {
@@ -853,42 +1261,123 @@ void CFtpClientDlg::OnSize(UINT nType, int cx, int cy)
 		MoveControl();
 }
 
-void CFtpClientDlg::OnNMClickListFileList(NMHDR *pNMHDR, LRESULT *pResult)
+//void CFtpClientDlg::OnNMClickListFileList(NMHDR *pNMHDR, LRESULT *pResult)
+//{
+//	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
+//	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+//	if (pNMHDR->idFrom == IDC_LIST_FILE_LIST && m_pThreadLastImage == NULL)
+//	{
+//		CSingleLock cr(&m_cr);
+//		cr.Lock();
+//		int iIndex = pNMItemActivate->iItem;
+//		int iCount = m_lcFileList.GetItemCount();
+//		if (0 <= iIndex && iIndex < iCount)
+//		{
+//			CFtpFileInfo *pFileInfo = (CFtpFileInfo *)m_lcFileList.GetItemData(iIndex);
+//			if (pFileInfo != NULL)
+//			{
+//				CString strFilePathName = pFileInfo->GetFilePathName();
+//				CString strLocalPathName;
+//				strLocalPathName.Format(_T(".\\%s"), pFileInfo->GetFileName());
+//				BOOL bDown = m_ftp.DownloadFile(strFilePathName, strLocalPathName);
+//				if (bDown)
+//				{
+//					CString strLocalPathName;
+//					strLocalPathName.Format(_T(".\\%s"), pFileInfo->GetFileName());
+//
+//					if (!m_imgDisplay.IsNull())
+//						m_imgDisplay.Destroy();
+//					HRESULT hr = m_imgDisplay.Load(strLocalPathName);
+//					if (SUCCEEDED(hr))
+//					{
+//						CRect rect;
+//						m_stDispImage.GetWindowRect(&rect); // 컨트롤 크기 얻기
+//						CDC *pDc = m_stDispImage.GetDC();
+//						::SetStretchBltMode(*pDc, HALFTONE); // HALFTONE모드로 설정해서 크기 축소로 인한 이미지 깨짐 현상 최소화
+//						m_imgDisplay.Draw(*pDc, 0, 0, rect.Width(), rect.Height(), 0, 0, m_imgDisplay.GetWidth(), m_imgDisplay.GetHeight());
+//
+//						DeleteFile(strLocalPathName);
+//					}
+//				}
+//			}
+//		}
+//	}
+//	*pResult = 0;
+//}
+
+void CFtpClientDlg::OnLvnItemchangedListFileList(NMHDR *pNMHDR, LRESULT *pResult)
 {
-	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
+	LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	if (pNMHDR->idFrom == IDC_LIST_FILE_LIST && m_pThreadLastImage == NULL)
+	if (pNMHDR->idFrom == IDC_LIST_FILE_LIST)
 	{
-		CSingleLock cr(&m_cr);
-		cr.Lock();
-		int iIndex = pNMItemActivate->iItem;
-		int iCount = m_lcFileList.GetItemCount();
-		if (0 <= iIndex && iIndex < iCount)
+		if ((pNMLV->uNewState & LVIS_FOCUSED) == LVIS_FOCUSED ||
+			(pNMLV->uNewState & LVIS_SELECTED) == LVIS_SELECTED)
 		{
-			CFtpFileInfo *pFileInfo = (CFtpFileInfo *)m_lcFileList.GetItemData(iIndex);
-			if (pFileInfo != NULL)
+			//if (m_pThreadLastImage == NULL)	// 수집 중이 아닐 때  (수집 중일 때 파일 리스트 클릭 시 이미지 출력 안함)
 			{
-				CString strFilePathName = pFileInfo->GetFilePathName();
-				CString strLocalPathName;
-				strLocalPathName.Format(_T(".\\%s"), pFileInfo->GetFileName());
-				BOOL bDown = m_ftp.DownloadFile(strFilePathName, strLocalPathName);
-				if (bDown)
+
+				CSingleLock cr(&m_cr);
+				cr.Lock();
+				int iCount = m_lcFileList.GetItemCount();
+				int iIndex = pNMLV->iItem/*m_lcFileList.GetSelectionMark()*/;
+				if (0 <= iIndex && iIndex < iCount)
 				{
-					CString strLocalPathName;
-					strLocalPathName.Format(_T(".\\%s"), pFileInfo->GetFileName());
-
-					if (!m_imgDisplay.IsNull())
-						m_imgDisplay.Destroy();
-					HRESULT hr = m_imgDisplay.Load(strLocalPathName);
-					if (SUCCEEDED(hr))
+					CFtpFileInfo *pFileInfo = (CFtpFileInfo *)m_lcFileList.GetItemData(iIndex);
+					if (pFileInfo != NULL)
 					{
-						CRect rect;
-						m_Image.GetWindowRect(&rect); // 컨트롤 크기 얻기
-						CDC *pDc = m_Image.GetDC();
-						::SetStretchBltMode(*pDc, HALFTONE); // HALFTONE모드로 설정해서 크기 축소로 인한 이미지 깨짐 현상 최소화
-						m_imgDisplay.Draw(*pDc, 0, 0, rect.Width(), rect.Height(), 0, 0, m_imgDisplay.GetWidth(), m_imgDisplay.GetHeight());
+						CString strFilePathName = pFileInfo->GetFileDownPathName();
+						CString strLocalPathName;
+						strLocalPathName.Format(_T(".\\%s"), pFileInfo->GetFileName());
+						BOOL bDown = m_ftp.DownloadFile(strFilePathName, strLocalPathName);
+						TRACE(_T("strFilePathName(%s), strLocalPathName(%s), bDown(%d)\n"), strFilePathName, strLocalPathName, bDown);
+						if (bDown)
+						{
+							CString strLocalPathName;
+							strLocalPathName.Format(_T(".\\%s"), pFileInfo->GetFileName());
+							CString strExt = PathFindExtension(strLocalPathName);
+							int iFtpPathType = pFileInfo->GetFtpPathType();
+							if (_tcscmp(_T(".jpg"), strExt) == 0 || _tcscmp(_T(".rbf"), strExt) == 0)
+							{
+								if (!m_imgDisplay.IsNull())
+									m_imgDisplay.Destroy();
+								HRESULT hr = m_imgDisplay.Load(strLocalPathName);
+								if (SUCCEEDED(hr))
+								{
+									CRect rect;
+									m_stDispImage.GetWindowRect(&rect); // 컨트롤 크기 얻기
+									CDC *pDc = m_stDispImage.GetDC();
+									::SetStretchBltMode(*pDc, HALFTONE); // HALFTONE모드로 설정해서 크기 축소로 인한 이미지 깨짐 현상 최소화
+									m_imgDisplay.Draw(*pDc, 0, 0, rect.Width(), rect.Height(), 0, 0, m_imgDisplay.GetWidth(), m_imgDisplay.GetHeight());
 
-						DeleteFile(strLocalPathName);
+									DeleteFile(strLocalPathName);
+								}
+							}
+							if (_tcscmp(_T(".log"), strExt) == 0 || _tcscmp(_T(".txt"), strExt) == 0)
+							{
+								CString strLocalPathName;
+								strLocalPathName.Format(_T(".\\%s"), pFileInfo->GetFileName());
+								if (m_fileText.m_hFile != CStdioFile::hFileNull)
+									m_fileText.Close();
+								BOOL bOpen = m_fileText.Open(strLocalPathName,
+															 CStdioFile::modeNoTruncate |
+															 CStdioFile::typeText |
+															 CStdioFile::modeReadWrite |
+															 CStdioFile::shareDenyNone);
+								if (bOpen)
+								{
+									CString strTotal(_T("")), strRead(_T(""));
+									while (m_fileText.ReadString(strRead))
+										strTotal += strRead + _T("\r\n");
+									m_edDispText.SetWindowText(strTotal);
+									m_fileText.Close();
+
+									DeleteFile(strLocalPathName);
+								}
+								else
+									AfxMessageBox(_T("Text File Load Fail"));
+							}
+						}
 					}
 				}
 			}
@@ -936,7 +1425,7 @@ UINT CFtpClientDlg::ThreadLastImage(LPVOID lpvoid)
 			if (bRes)
 			{
 				CString strFtpPath = _T("");
-				pThis->m_edFtpPath.GetWindowText(strFtpPath);
+				pThis->m_cbFtpPath.GetWindowText(strFtpPath);
 				bRes = pThis->m_ftp.SetCurrentDir(strFtpPath);
 				if (bRes)
 				{
@@ -978,3 +1467,25 @@ UINT CFtpClientDlg::ThreadLastImage(LPVOID lpvoid)
 	return 0;
 }
 
+
+
+void CFtpClientDlg::OnCbnSelchangeComboFtpPath()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	int iFtpPath = m_cbFtpPath.GetCurSel();
+	if (iFtpPath == 3)
+	{
+		((CButton*)GetDlgItem(IDC_RADIO_IMAGE))->SetCheck(TRUE);
+		((CButton*)GetDlgItem(IDC_RADIO_TEXT))->SetCheck(FALSE);
+		m_iFtpShowFileType = 0;
+		RadioEnableControl(m_iFtpShowFileType); // 라디오 버튼 - 컨트롤 활성화/비활성화
+		ShowControlByFileType(m_iFtpShowFileType); // 파일 타입에 따른 컨트롤 표시
+	}
+	else
+	{
+		GetDlgItem(IDC_RADIO_IMAGE)->EnableWindow(TRUE);
+		GetDlgItem(IDC_RADIO_TEXT)->EnableWindow(TRUE);
+	}
+	SetFtpPathToConfig(iFtpPath);
+	TRACE(_T("%d\n"), iFtpPath);
+}

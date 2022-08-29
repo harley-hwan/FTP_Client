@@ -5,6 +5,11 @@ VisualStudioVersion = 16.0.32413.511
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FtpClient", "FtpClient\FtpClient.vcxproj", "{20A2464B-EAFF-4AAF-AD5D-BB7146F8C072}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ini", "ini", "{2057239E-1BFC-4940-ADC2-2A59485711C8}"
+	ProjectSection(SolutionItems) = preProject
+		ini\config.ini = ini\config.ini
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64

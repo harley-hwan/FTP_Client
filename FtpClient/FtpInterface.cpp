@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "FtpInterface.h"
 #pragma comment(lib, "Wininet.lib")
+#include "FtpClientDlg.h"
 
 #define LEN_ERR_MSG 1024
 
@@ -8,6 +9,7 @@
 
 CFtpInterface::CFtpInterface(void)
 {
+	m_pOwner = NULL;
 	m_pSession = NULL;
 	m_pFtp = NULL;
 
@@ -48,6 +50,10 @@ BOOL CFtpInterface::Login(CString strIP, UINT nPort, CString strID, CString strP
 
 		m_pFtp = m_pSession->GetFtpConnection(strIP, strID, strPass, nPort, bPassive);
 		ResetEvent(m_hEventClose);
+
+		if (m_pOwner != NULL && ((CFtpClientDlg*)m_pOwner)->GetSafeHwnd() != NULL)
+			((CFtpClientDlg*)m_pOwner)->LoginEnableControl(TRUE);
+
 		return TRUE;
 	}
 	catch (CException* e)
@@ -107,6 +113,9 @@ void CFtpInterface::Logout()
 		delete m_pSession;
 		m_pSession = NULL;
 	}
+
+	if (m_pOwner != NULL && ((CFtpClientDlg*)m_pOwner)->GetSafeHwnd() != NULL)
+		((CFtpClientDlg*)m_pOwner)->LoginEnableControl(FALSE);
 }
 
 BOOL CFtpInterface::IsConnected()
@@ -196,7 +205,7 @@ BOOL CFtpInterface::SetCurrentDir(CString strDirectory)
 	return bRes;
 }
 
-BOOL CFtpInterface::GetFtpFileList(CPtrArray& arrFileList)
+BOOL CFtpInterface::GetFtpFileList(CPtrArray& arrFileList, BOOL bFileAll/* = FALSE*/)
 {
 	try
 	{
@@ -209,8 +218,38 @@ BOOL CFtpInterface::GetFtpFileList(CPtrArray& arrFileList)
 				continue;
 
 			CString strName = finder.GetFileName();
-			if (strName.Find(_T(".jpg")) <= 0)
-				continue;
+			CString strExt = PathFindExtension(strName);
+
+			int iFileType = 0;
+			int iFtpPath = -1;
+			if (!bFileAll)
+			{
+				if (m_pOwner != NULL && ((CFtpClientDlg*)m_pOwner)->GetSafeHwnd() != NULL)
+				{
+					iFtpPath = ((CFtpClientDlg*)m_pOwner)->GetFtpPathType();
+					iFileType = ((CFtpClientDlg*)m_pOwner)->GetFtpShowFileType();
+				}
+
+				// ShortDB
+				if (iFtpPath == 3)
+				{
+					if (_tcscmp(strExt, _T(".rbf")) !=  0)
+						continue;
+				}
+				else
+				{
+					if (iFileType == 0)
+					{
+						if (_tcscmp(strExt, _T(".jpg")) !=  0)
+							continue;
+					}
+					else if (iFileType == 1)
+					{
+						if (_tcscmp(strExt, _T(".log")) !=  0 && _tcscmp(strExt, _T(".txt")) !=  0)
+							continue;
+					}
+				}
+			}
 
 			CTime tmLastWrite;
 			finder.GetLastWriteTime(tmLastWrite);
@@ -218,7 +257,7 @@ BOOL CFtpInterface::GetFtpFileList(CPtrArray& arrFileList)
 			CTime tmCreation;
 			finder.GetCreationTime(tmCreation);
 
-  			CFtpFileInfo* pFileInfo = new CFtpFileInfo(tmLastWrite, strName, strPath);
+  			CFtpFileInfo* pFileInfo = new CFtpFileInfo(iFtpPath, tmLastWrite, strName, strPath);
  			arrFileList.Add(pFileInfo);
 			TRACE(_T("tmLastWrite(%s), strName(%s), strPath(%s)\n"),
 				  tmLastWrite.Format(_T("%Y:%m:%d %H:%M:%S")), strName, strPath);
@@ -340,4 +379,9 @@ CString CFtpInterface::GetCurrentModulePath()
 	}
 
 	return sFilePath;
+}
+
+void CFtpInterface::SetOwner(void * pOwner)
+{
+	m_pOwner = pOwner;
 }

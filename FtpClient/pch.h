@@ -10,4 +10,8 @@
 // 여기에 미리 컴파일하려는 헤더 추가
 #include "framework.h"
 
+#define FILE_NAME_PATH	_T(".\\config.ini")
+#define SECTION_CONFIG	_T("CONFIG")
+#define KEY_FTP_PATH	_T("FTP_PATH")
+
 #endif //PCH_H
