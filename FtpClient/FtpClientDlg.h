@@ -46,6 +46,7 @@ protected:
 	CComboBox m_cbFtpPath; // FTP Path
 
 	CListCtrl m_lcFileList; // 화면 표시용 리스트 컨트롤
+	CListCtrl m_lcWifiList; // 화면 표시용 리스트 컨트롤
 	CStatic m_stDispImage; // 이미지 표시 컨트롤
 	CEdit m_edDispText; // 텍스트 표시 컨트롤
 	int m_iListCtrlFileType;
@@ -104,4 +105,5 @@ protected:
 	static UINT ThreadLastImage(LPVOID lpvoid);
 public:
 	afx_msg void OnCbnSelchangeComboFtpPath(); // ftp path 콤보박스 변경
+	afx_msg void OnBnClickedButtonWifiScan();
 };

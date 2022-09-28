@@ -151,11 +151,11 @@ BOOL CFtpInterface::IsPossibleUse()
 	{
 		Sleep(100);
 
+
+	return bRes;
 		// 재로그인
 		bRes = Login();
 	}
-
-	return bRes;
 }
 
 BOOL CFtpInterface::GetCurrentDir(CString& strDirectory)

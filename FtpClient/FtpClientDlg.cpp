@@ -7,6 +7,8 @@
 #include "FtpClient.h"
 #include "FtpClientDlg.h"
 #include "afxdialogex.h"
+#include <string>
+#include <fstream>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -45,7 +47,7 @@ CFtpClientDlg::~CFtpClientDlg()
 		m_imgDisplay.Destroy();
 	cr.Unlock();
 
-	int iCount = m_arrFileList.GetCount();
+	int iCount = (int)m_arrFileList.GetCount();
 	for (int iIndex = 0 ; iIndex < iCount ; iIndex++)
 	{
 		CFtpFileInfo *pFileInfo = (CFtpFileInfo *)m_arrFileList.GetAt(iIndex);
@@ -67,6 +69,7 @@ void CFtpClientDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT_FTP_PASS, m_edFtpPass);
 	//DDX_Control(pDX, IDC_EDIT_FTP_PATH, m_edFtpPath);
 	DDX_Control(pDX, IDC_LIST_FILE_LIST, m_lcFileList);
+	DDX_Control(pDX, IDC_LIST_WIFI_LIST, m_lcWifiList);
 	DDX_Control(pDX, IDC_STATIC_LAST_WRTIE_TIME_IMAGE, m_stDispImage);
 	DDX_Control(pDX, IDC_COMBO_FTP_PATH, m_cbFtpPath);
 	DDX_Control(pDX, IDC_RADIO_IMAGE, m_rdImage);
@@ -90,7 +93,9 @@ BEGIN_MESSAGE_MAP(CFtpClientDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_DOWN_ALL_FILE, &CFtpClientDlg::OnBnClickedButtonDownAllFile)
 	//ON_NOTIFY(NM_CLICK, IDC_LIST_FILE_LIST, &CFtpClientDlg::OnNMClickListFileList)
 	ON_NOTIFY(LVN_ITEMCHANGED, IDC_LIST_FILE_LIST, &CFtpClientDlg::OnLvnItemchangedListFileList)
+	//ON_NOTIFY(LVN_ITEMCHANGED, IDC_LIST_WIFI_LIST, &CFtpClientDlg::OnLvnItemchangedListWifiList)
 	ON_CBN_SELCHANGE(IDC_COMBO_FTP_PATH, &CFtpClientDlg::OnCbnSelchangeComboFtpPath)
+	ON_BN_CLICKED(IDC_BUTTON_WIFI_SCAN, &CFtpClientDlg::OnBnClickedButtonWifiScan)
 END_MESSAGE_MAP()
 
 
@@ -176,6 +181,10 @@ void CFtpClientDlg::InitDialog()
 	m_lcFileList.InsertColumn(0, _T("Time"), LVCFMT_CENTER, 150);
 	m_lcFileList.InsertColumn(1, _T("File Name"), LVCFMT_CENTER, 250);
 
+	m_lcWifiList.SetExtendedStyle(/*LVS_EX_GRIDLINES | */LVS_EX_FULLROWSELECT); // 리스트 스타일
+	//m_lcWifiList.InsertColumn(0, _T("No."), LVCFMT_CENTER, 50);
+	m_lcWifiList.InsertColumn(0, _T("WiFi Name"), LVCFMT_CENTER, 250);
+
 	m_iFtpShowFileType = 0;
 	m_rdImage.SetCheck(TRUE);
 	ShowControlByFileType(m_iFtpShowFileType);
@@ -192,7 +201,7 @@ void CFtpClientDlg::RemoveFileList()
 	CSingleLock cr(&m_cr);
 	cr.Lock();
 	m_lcFileList.DeleteAllItems();
-	int iCount = m_arrFileList.GetCount();
+	int iCount = (int)m_arrFileList.GetCount();
 	for (int iIndex = 0 ; iIndex < iCount ; iIndex++)
 	{
 		CFtpFileInfo *pFileInfo = (CFtpFileInfo *)m_arrFileList.GetAt(iIndex);
@@ -212,7 +221,7 @@ void CFtpClientDlg::DisplayFileList()
 	cr.Lock();
 	m_lcFileList.SetRedraw(FALSE);
 	m_lcFileList.DeleteAllItems();
-	int iCount = m_arrFileList.GetCount();
+	int iCount = (int)m_arrFileList.GetCount();
 
 	for (int iIndex = 0 ; iIndex < iCount ; iIndex++)
 	{
@@ -484,65 +493,67 @@ int CFtpClientDlg::SetFileInfoToList(int iIndex, CFtpFileInfo * pFileInfo)
 
 void CFtpClientDlg::MoveControl()
 {
-    //GROUPBOX        "WiFi List",IDC_STATIC_GROUP_WIFI,7,7,157,185
-    //GROUPBOX        "FTP Info",IDC_STATIC_GROUP_FTP,7,196,157,118
-    //RTEXT           "Server IP : ",IDC_STATIC_IP,12,208,59,14,SS_CENTERIMAGE
-    //CONTROL         "",IDC_IPADDRESS_FTP,"SysIPAddress32",WS_TABSTOP,78,208,79,15
-    //RTEXT           "Port No : ",IDC_STATIC_PORT,12,224,59,14,SS_CENTERIMAGE
-    //EDITTEXT        IDC_EDIT_FTP_PORT,78,224,79,14,ES_AUTOHSCROLL
-    //RTEXT           "FTP Path : ",IDC_STATIC_PATH,12,240,59,14,SS_CENTERIMAGE
-    //EDITTEXT        IDC_EDIT_FTP_PATH,147,258,24,14,ES_AUTOHSCROLL | NOT WS_VISIBLE
-    //RTEXT           "User ID : ",IDC_STATIC_USER_ID,12,256,59,14,SS_CENTERIMAGE
-    //EDITTEXT        IDC_EDIT_FTP_ID,78,256,79,14,ES_AUTOHSCROLL
-    //RTEXT           "User Password : ",IDC_STATIC_USER_PASS,13,272,56,14,SS_CENTERIMAGE
-    //EDITTEXT        IDC_EDIT_FTP_PASS,78,273,79,14,ES_AUTOHSCROLL
-    //PUSHBUTTON      "Login",IDC_BUTTON_FTP_CONN,7,319,45,14
-    //PUSHBUTTON      "Logout",IDC_BUTTON_FTP_DISCONN,55,319,45,14
-    //GROUPBOX        "File List",IDC_STATIC_GROUP_FILE_LIST,168,7,241,345
-    //CONTROL         "",IDC_LIST_FILE_LIST,"SysListView32",LVS_REPORT | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,175,17,226,326
-    //GROUPBOX        "Last Write Time Image",IDC_STATIC_GROUP_IMAGE,412,7,386,345
-    //CONTROL         "",IDC_STATIC_LAST_WRTIE_TIME_IMAGE,"Static",SS_BLACKFRAME | SS_NOTIFY | SS_CENTERIMAGE,420,19,372,322
-    //PUSHBUTTON      "최근 파일 표시",IDC_BUTTON_GET_LAST_IMAGE,107,319,45,14
-    //PUSHBUTTON      "수집 시작",IDC_BUTTON_START_THREAD,7,338,45,14
-    //PUSHBUTTON      "수집 종료",IDC_BUTTON_END_THREAD,55,338,45,14
-    //COMBOBOX        IDC_COMBO_FTP_PATH,78,241,79,30,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
-    //CONTROL         "Image",IDC_RADIO_IMAGE,"Button",BS_AUTORADIOBUTTON | WS_GROUP,24,295,35,10
-    //CONTROL         "Text",IDC_RADIO_TEXT,"Button",BS_AUTORADIOBUTTON,84,293,31,10
-    //EDITTEXT        IDC_EDIT_LAST_WRTIE_TIME_IMAGE,419,19,68,58,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | NOT WS_VISIBLE | WS_VSCROLL
-    //PUSHBUTTON      "모든 파일 다운",IDC_BUTTON_DOWN_ALL_FILE,106,338,45,14
+	//GROUPBOX        "WiFi List",IDC_STATIC_GROUP_WIFI,7,7,157,185
+	//GROUPBOX        "FTP Info",IDC_STATIC_GROUP_FTP,7,196,157,118
+	//RTEXT           "Server IP : ",IDC_STATIC_IP,12,208,59,14,SS_CENTERIMAGE
+	//CONTROL         "",IDC_IPADDRESS_FTP,"SysIPAddress32",WS_TABSTOP,78,208,79,15
+	//RTEXT           "Port No : ",IDC_STATIC_PORT,12,224,59,14,SS_CENTERIMAGE
+	//EDITTEXT        IDC_EDIT_FTP_PORT,78,224,79,14,ES_AUTOHSCROLL
+	//RTEXT           "FTP Path : ",IDC_STATIC_PATH,12,240,59,14,SS_CENTERIMAGE
+	//EDITTEXT        IDC_EDIT_FTP_PATH,147,258,24,14,ES_AUTOHSCROLL | NOT WS_VISIBLE
+	//RTEXT           "User ID : ",IDC_STATIC_USER_ID,12,256,59,14,SS_CENTERIMAGE
+	//EDITTEXT        IDC_EDIT_FTP_ID,78,256,79,14,ES_AUTOHSCROLL
+	//RTEXT           "User Password : ",IDC_STATIC_USER_PASS,13,272,56,14,SS_CENTERIMAGE
+	//EDITTEXT        IDC_EDIT_FTP_PASS,78,273,79,14,ES_AUTOHSCROLL
+	//PUSHBUTTON      "Login",IDC_BUTTON_FTP_CONN,7,319,45,14
+	//PUSHBUTTON      "Logout",IDC_BUTTON_FTP_DISCONN,55,319,45,14
+	//GROUPBOX        "File List",IDC_STATIC_GROUP_FILE_LIST,168,7,241,345
+	//CONTROL         "",IDC_LIST_FILE_LIST,"SysListView32",LVS_REPORT | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,175,17,226,326
+	//GROUPBOX        "Last Write Time Image",IDC_STATIC_GROUP_IMAGE,412,7,386,345
+	//CONTROL         "",IDC_STATIC_LAST_WRTIE_TIME_IMAGE,"Static",SS_BLACKFRAME | SS_NOTIFY | SS_CENTERIMAGE,420,19,372,322
+	//PUSHBUTTON      "최근 파일 표시",IDC_BUTTON_GET_LAST_IMAGE,107,319,45,14
+	//PUSHBUTTON      "수집 시작",IDC_BUTTON_START_THREAD,7,338,45,14
+	//PUSHBUTTON      "수집 종료",IDC_BUTTON_END_THREAD,55,338,45,14
+	//COMBOBOX        IDC_COMBO_FTP_PATH,78,241,79,30,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+	//CONTROL         "Image",IDC_RADIO_IMAGE,"Button",BS_AUTORADIOBUTTON | WS_GROUP,24,295,35,10
+	//CONTROL         "Text",IDC_RADIO_TEXT,"Button",BS_AUTORADIOBUTTON,84,293,31,10
+	//EDITTEXT        IDC_EDIT_LAST_WRTIE_TIME_IMAGE,419,19,68,58,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | NOT WS_VISIBLE | WS_VSCROLL
+	//PUSHBUTTON      "모든 파일 다운",IDC_BUTTON_DOWN_ALL_FILE,106,338,45,14
 	int iGap10 = 10, iGap5 = 5, iGap2 = 2;
-	CWnd *pBtnFtpCon = GetDlgItem(IDC_BUTTON_FTP_CONN);
-	CWnd *pBtnFtpDiscon = GetDlgItem(IDC_BUTTON_FTP_DISCONN);
-    CWnd *pBtnGetImg = GetDlgItem(IDC_BUTTON_GET_LAST_IMAGE);
-	CWnd *pBtnStart = GetDlgItem(IDC_BUTTON_START_THREAD);
-	CWnd *pBtnEnd = GetDlgItem(IDC_BUTTON_END_THREAD);
-	CWnd *pBtnDownAllFile = GetDlgItem(IDC_BUTTON_DOWN_ALL_FILE);
-	CWnd *pGroupWifi = GetDlgItem(IDC_STATIC_GROUP_WIFI);
-	CWnd *pAddrFtpIP = GetDlgItem(IDC_IPADDRESS_FTP);
-	CWnd *pEdFtpPort = GetDlgItem(IDC_EDIT_FTP_PORT);
+	CWnd* pBtnWiFiScan = GetDlgItem(IDC_BUTTON_WIFI_SCAN);
+	CWnd* pBtnFtpCon = GetDlgItem(IDC_BUTTON_FTP_CONN);
+	CWnd* pBtnFtpDiscon = GetDlgItem(IDC_BUTTON_FTP_DISCONN);
+	CWnd* pBtnGetImg = GetDlgItem(IDC_BUTTON_GET_LAST_IMAGE);
+	CWnd* pBtnStart = GetDlgItem(IDC_BUTTON_START_THREAD);
+	CWnd* pBtnEnd = GetDlgItem(IDC_BUTTON_END_THREAD);
+	CWnd* pBtnDownAllFile = GetDlgItem(IDC_BUTTON_DOWN_ALL_FILE);
+	CWnd* pGroupWifi = GetDlgItem(IDC_STATIC_GROUP_WIFI);
+	CWnd* pAddrFtpIP = GetDlgItem(IDC_IPADDRESS_FTP);
+	CWnd* pEdFtpPort = GetDlgItem(IDC_EDIT_FTP_PORT);
 	//CWnd *pEdFtpPath = GetDlgItem(IDC_EDIT_FTP_PATH);
-	CWnd *pCbFtpPath = GetDlgItem(IDC_COMBO_FTP_PATH);
-	CWnd *pEdFtpID = GetDlgItem(IDC_EDIT_FTP_ID);
-	CWnd *pEdFtpPass = GetDlgItem(IDC_EDIT_FTP_PASS);
-	CWnd *pGroupFtp = GetDlgItem(IDC_STATIC_GROUP_FTP);
-    CWnd *pGroupFileList = GetDlgItem(IDC_STATIC_GROUP_FILE_LIST);
-	CWnd *pGroupImage = GetDlgItem(IDC_STATIC_GROUP_IMAGE);
-	CWnd *pStaticIP = GetDlgItem(IDC_STATIC_IP);
-	CWnd *pStaticPort = GetDlgItem(IDC_STATIC_PORT);
-	CWnd *pStaticPath = GetDlgItem(IDC_STATIC_PATH);
-	CWnd *pStaticID = GetDlgItem(IDC_STATIC_USER_ID);
-	CWnd *pStaticPass = GetDlgItem(IDC_STATIC_USER_PASS);
-	CWnd *pLcFile = GetDlgItem(IDC_LIST_FILE_LIST);
-	CWnd *pPcImage = GetDlgItem(IDC_STATIC_LAST_WRTIE_TIME_IMAGE);
-	CWnd *pedImage = GetDlgItem(IDC_EDIT_LAST_WRTIE_TIME_IMAGE);
-	CWnd *pRdImage = GetDlgItem(IDC_RADIO_IMAGE);
-	CWnd *pRdText = GetDlgItem(IDC_RADIO_TEXT);
-	
+	CWnd* pCbFtpPath = GetDlgItem(IDC_COMBO_FTP_PATH);
+	CWnd* pEdFtpID = GetDlgItem(IDC_EDIT_FTP_ID);
+	CWnd* pEdFtpPass = GetDlgItem(IDC_EDIT_FTP_PASS);
+	CWnd* pGroupFtp = GetDlgItem(IDC_STATIC_GROUP_FTP);
+	CWnd* pGroupFileList = GetDlgItem(IDC_STATIC_GROUP_FILE_LIST);
+	CWnd* pGroupImage = GetDlgItem(IDC_STATIC_GROUP_IMAGE);
+	CWnd* pStaticIP = GetDlgItem(IDC_STATIC_IP);
+	CWnd* pStaticPort = GetDlgItem(IDC_STATIC_PORT);
+	CWnd* pStaticPath = GetDlgItem(IDC_STATIC_PATH);
+	CWnd* pStaticID = GetDlgItem(IDC_STATIC_USER_ID);
+	CWnd* pStaticPass = GetDlgItem(IDC_STATIC_USER_PASS);
+	CWnd* pLcFile = GetDlgItem(IDC_LIST_FILE_LIST);
+	CWnd* pLcWifi = GetDlgItem(IDC_LIST_WIFI_LIST);
+	CWnd* pPcImage = GetDlgItem(IDC_STATIC_LAST_WRTIE_TIME_IMAGE);
+	CWnd* pedImage = GetDlgItem(IDC_EDIT_LAST_WRTIE_TIME_IMAGE);
+	CWnd* pRdImage = GetDlgItem(IDC_RADIO_IMAGE);
+	CWnd* pRdText = GetDlgItem(IDC_RADIO_TEXT);
+
 	if (pBtnStart == NULL || pBtnStart->GetSafeHwnd() == NULL ||
 		pBtnFtpCon == NULL || pBtnFtpCon->GetSafeHwnd() == NULL ||
 		pBtnFtpDiscon == NULL || pBtnFtpDiscon->GetSafeHwnd() == NULL ||
 		pBtnGetImg == NULL || pBtnGetImg->GetSafeHwnd() == NULL ||
-		pBtnStart == NULL || pBtnStart->GetSafeHwnd() == NULL ||		
+		pBtnStart == NULL || pBtnStart->GetSafeHwnd() == NULL ||
 		pBtnEnd == NULL || pBtnEnd->GetSafeHwnd() == NULL ||
 		pBtnDownAllFile == NULL || pBtnDownAllFile->GetSafeHwnd() == NULL ||
 		pGroupWifi == NULL || pGroupWifi->GetSafeHwnd() == NULL ||
@@ -564,6 +575,7 @@ void CFtpClientDlg::MoveControl()
 		pedImage == NULL || pedImage->GetSafeHwnd() == NULL ||
 		pRdImage == NULL || pRdImage->GetSafeHwnd() == NULL ||
 		pRdText == NULL || pRdText->GetSafeHwnd() == NULL ||
+		pBtnWiFiScan == NULL ||
 		false)
 		return;
 
@@ -577,11 +589,11 @@ void CFtpClientDlg::MoveControl()
 	pBtnStart->GetWindowRect(rcBtnStart);
 	ScreenToClient(rcBtnStart);
 	pBtnStart->SetWindowPos(NULL,
-							iGap10,
-							rcDlg.Height() - rcBtnStart.Height() - iGap10,
-							rcBtnStart.Width(),
-							rcBtnStart.Height(),
-							SWP_NOACTIVATE | SWP_NOZORDER);
+		iGap10,
+		rcDlg.Height() - rcBtnStart.Height() - iGap10,
+		rcBtnStart.Width(),
+		rcBtnStart.Height(),
+		SWP_NOACTIVATE | SWP_NOZORDER);
 	pBtnStart->GetWindowRect(rcBtnStart);
 	ScreenToClient(rcBtnStart);
 
@@ -590,11 +602,11 @@ void CFtpClientDlg::MoveControl()
 	pBtnEnd->GetWindowRect(rcBtnEnd);
 	ScreenToClient(rcBtnEnd);
 	pBtnEnd->SetWindowPos(NULL,
-						  rcBtnStart.right + iGap10,
-						  rcBtnStart.top,
-						  rcBtnEnd.Width(),
-						  rcBtnEnd.Height(),
-						  SWP_NOACTIVATE | SWP_NOZORDER);
+		rcBtnStart.right + iGap10,
+		rcBtnStart.top,
+		rcBtnEnd.Width(),
+		rcBtnEnd.Height(),
+		SWP_NOACTIVATE | SWP_NOZORDER);
 	pBtnEnd->GetWindowRect(rcBtnEnd);
 	ScreenToClient(rcBtnEnd);
 
@@ -603,15 +615,14 @@ void CFtpClientDlg::MoveControl()
 	pBtnDownAllFile->GetWindowRect(rcBtnDownAll);
 	ScreenToClient(rcBtnDownAll);
 	pBtnDownAllFile->SetWindowPos(NULL,
-								  rcBtnEnd.right + iGap10,
-								  rcBtnStart.top,
-								  rcBtnDownAll.Width(),
-								  rcBtnDownAll.Height(),
-								  SWP_NOACTIVATE | SWP_NOZORDER);
+		rcBtnEnd.right + iGap10,
+		rcBtnStart.top,
+		rcBtnDownAll.Width(),
+		rcBtnDownAll.Height(),
+		SWP_NOACTIVATE | SWP_NOZORDER);
 	pBtnDownAllFile->GetWindowRect(rcBtnDownAll);
 	ScreenToClient(rcBtnDownAll);
 
-	
 	// login
 	CRect rcBtnConn;
 	pBtnFtpCon->GetWindowRect(rcBtnConn);
@@ -662,7 +673,7 @@ void CFtpClientDlg::MoveControl()
 							rcGroupFtp.Height(),
 							SWP_NOACTIVATE | SWP_NOZORDER);
 	pGroupFtp->GetWindowRect(rcGroupFtp);
-	ScreenToClient(rcGroupFtp);
+	ScreenToClient(rcGroupFtp);	
 
 	// Wifi 그룹
 	CRect rcGroupWifi;
@@ -672,11 +683,37 @@ void CFtpClientDlg::MoveControl()
 							 iGap10,
 							 iGap10,
 							 rcGroupWifi.Width(),
-							 rcGroupFtp.top - iGap10,
+							 rcGroupFtp.top - iGap10*6,
 							 SWP_NOACTIVATE | SWP_NOZORDER);
 	pGroupWifi->GetWindowRect(rcGroupWifi);
 	ScreenToClient(rcGroupWifi);
 
+	// Wifi List Control 
+	CRect rcLcWifiList;
+	pLcWifi->GetWindowRect(rcLcWifiList);
+	ScreenToClient(rcLcWifiList);
+	pLcWifi->SetWindowPos(NULL,
+		rcGroupWifi.left + iGap10,
+		rcGroupWifi.top + iGap10*2,
+		rcGroupWifi.Width() - iGap10*2,
+		rcGroupWifi.Height() - iGap10*3,
+		SWP_NOACTIVATE | SWP_NOZORDER);
+	pLcWifi->GetWindowRect(rcLcWifiList);
+	ScreenToClient(rcLcWifiList);
+
+	// WiFiScan
+	CRect rcBtnWifiScan;
+	pBtnWiFiScan->GetWindowRect(rcBtnWifiScan);
+	ScreenToClient(rcBtnWifiScan);
+	pBtnWiFiScan->SetWindowPos(NULL,
+							   iGap10,
+							   rcGroupWifi.bottom+ iGap10,
+							   rcBtnConn.Width(),
+							   rcBtnConn.Height(),
+							   SWP_NOACTIVATE | SWP_NOZORDER);
+	pBtnWiFiScan->GetWindowRect(rcBtnWifiScan);
+	ScreenToClient(rcBtnWifiScan);
+	
 	// IP - STATIC
 	CRect rcStaticIP;
 	pStaticIP->GetWindowRect(rcStaticIP);
@@ -1170,7 +1207,7 @@ void CFtpClientDlg::OnBnClickedButtonDownAllFile()
 	bRes = m_ftp.GetFtpFileList(arrFileList, TRUE);
 	if (bRes)
 	{
-		int iCount = arrFileList.GetCount();
+		int iCount = (int)arrFileList.GetCount();
 		int iSuccess = 0, iFail = 0;
 		for (int iIndex = 0 ; iIndex < iCount ; iIndex++)
 		{
@@ -1386,7 +1423,6 @@ void CFtpClientDlg::OnLvnItemchangedListFileList(NMHDR *pNMHDR, LRESULT *pResult
 	*pResult = 0;
 }
 
-
 void CFtpClientDlg::OnStnDblclickStaticLastWrtieTimeImage()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
@@ -1468,7 +1504,6 @@ UINT CFtpClientDlg::ThreadLastImage(LPVOID lpvoid)
 }
 
 
-
 void CFtpClientDlg::OnCbnSelchangeComboFtpPath()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
@@ -1488,4 +1523,43 @@ void CFtpClientDlg::OnCbnSelchangeComboFtpPath()
 	}
 	SetFtpPathToConfig(iFtpPath);
 	TRACE(_T("%d\n"), iFtpPath);
+}
+
+
+// wifi list
+void CFtpClientDlg::OnBnClickedButtonWifiScan()
+{
+	// TODO: Add your control notification handler code here
+	CString m_str;
+	string ip;
+	string wave = "WAVE";
+
+	m_lcWifiList.DeleteAllItems();
+	system("netsh wlan show networks mode = bssid | findstr \"^SSID Signal\" > wifilist.txt");
+	ifstream ifs("wifilist.txt");
+	ofstream ofs("wifilist_out.txt");
+	while (ifs)
+	{
+		string line;
+		getline(ifs, line, ':');
+		getline(ifs, line, ' ');
+		getline(ifs, line, '\n');
+
+		int nItemNum = m_lcWifiList.GetItemCount();
+		if (line.find(wave) == 0)
+		{
+			//ofs << line.find(wave) << endl;
+			ofs << line << endl;
+			m_str = line.c_str();
+			m_lcWifiList.InsertItem(nItemNum, m_str);
+		}
+		/*getline(ifs, line, '(');
+		cout << line;
+		getline(ifs, ip, ')');	
+		cout << ip;
+		getline(ifs, line, '\n');*/
+	}
+
+	ifs.close();
+	//cout << "out" << endl;
 }
