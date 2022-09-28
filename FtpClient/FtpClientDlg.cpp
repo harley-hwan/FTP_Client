@@ -96,6 +96,8 @@ BEGIN_MESSAGE_MAP(CFtpClientDlg, CDialogEx)
 	//ON_NOTIFY(LVN_ITEMCHANGED, IDC_LIST_WIFI_LIST, &CFtpClientDlg::OnLvnItemchangedListWifiList)
 	ON_CBN_SELCHANGE(IDC_COMBO_FTP_PATH, &CFtpClientDlg::OnCbnSelchangeComboFtpPath)
 	ON_BN_CLICKED(IDC_BUTTON_WIFI_SCAN, &CFtpClientDlg::OnBnClickedButtonWifiScan)
+	ON_NOTIFY(LVN_ITEMCHANGED, IDC_LIST_WIFI_LIST, &CFtpClientDlg::OnLvnItemchangedListWifiList)
+	ON_NOTIFY(NM_DBLCLK, IDC_LIST_WIFI_LIST, &CFtpClientDlg::OnDblclkListWifiList)
 END_MESSAGE_MAP()
 
 
@@ -1546,7 +1548,7 @@ void CFtpClientDlg::OnBnClickedButtonWifiScan()
 		getline(ifs, line, '\n');
 
 		int nItemNum = m_lcWifiList.GetItemCount();
-		if (line.find(wave) == 0)
+		//if (line.find(wave) == 0)
 		{
 			//ofs << line.find(wave) << endl;
 			ofs << line << endl;
@@ -1563,3 +1565,51 @@ void CFtpClientDlg::OnBnClickedButtonWifiScan()
 	ifs.close();
 	//cout << "out" << endl;
 }
+
+
+//void CFtpClientDlg::OnLvnItemchangedListWifiList(NMHDR* pNMHDR, LRESULT* pResult)
+//{
+//	LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
+//	// TODO: Add your control notification handler code here
+//	string m_editNum2;
+//	DWORD mousePos = GetMessagePos();
+//	//m_editNume2.SetWindowText(m_lcWifiList.GetItemText(pNMLV->iItem, 1));
+//	POINT p;
+//	CPoint cp;
+//	p.x = GET_X_LPARAM(mousePos);
+//	p.x = GET_X_LPARAM(mousePos);
+//
+//	ScreenToClient(&p);
+//	cp.x = p.x;
+//	cp.y = p.y;
+//	UINT flag;
+//
+//	if (m_lcWifiList.HitTest(cp, &flag) == -1)
+//	{
+//		MessageBox(L"hi", L"crap", MB_OK);
+//	}
+//
+//
+//	//MessageBox(L"김장환", L"알림", MB_OKCANCEL | MB_ICONINFORMATION);
+//	*pResult = 0;
+//}
+
+void CFtpClientDlg::OnDblclkListWifiList(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
+	// TODO: Add your control notification handler code here
+
+
+
+	*pResult = 0;
+}
+
+
+// wifi connect command (cmd)
+// system("netsh wlan connect ssid=WAVE_ea:05:9f:b4 name=WAVE_ea:05:9f:b4 interface=\"Wi-Fi 2\"");
+// 
+// netsh wlan connect ssid=WAVE_ea:05:9f:b4 name=WAVE_ea:05:9f:b4 interface="Wi-Fi 2"
+
+//string WIFI_NAME = "WAVE_ea:05:9f:b4";
+//string WIFI_NUM = "\"Wi-Fi 2\"";
+//string command = "netsh wlan connect ssid=" + WIFI_NAME + " name=" + WIFI_NAME + " interface=" + WIFI_NUM;

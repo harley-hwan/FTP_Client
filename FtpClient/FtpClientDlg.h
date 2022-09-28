@@ -106,4 +106,6 @@ protected:
 public:
 	afx_msg void OnCbnSelchangeComboFtpPath(); // ftp path 콤보박스 변경
 	afx_msg void OnBnClickedButtonWifiScan();
+	afx_msg void OnDblclkListWifiList(NMHDR* pNMHDR, LRESULT* pResult);
+	//afx_msg void OnLvnItemchangedListWifiList(NMHDR* pNMHDR, LRESULT* pResult);
 };
