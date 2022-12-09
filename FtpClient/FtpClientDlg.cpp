@@ -96,7 +96,7 @@ BEGIN_MESSAGE_MAP(CFtpClientDlg, CDialogEx)
 	//ON_NOTIFY(LVN_ITEMCHANGED, IDC_LIST_WIFI_LIST, &CFtpClientDlg::OnLvnItemchangedListWifiList)
 	ON_CBN_SELCHANGE(IDC_COMBO_FTP_PATH, &CFtpClientDlg::OnCbnSelchangeComboFtpPath)
 	ON_BN_CLICKED(IDC_BUTTON_WIFI_SCAN, &CFtpClientDlg::OnBnClickedButtonWifiScan)
-	ON_NOTIFY(LVN_ITEMCHANGED, IDC_LIST_WIFI_LIST, &CFtpClientDlg::OnLvnItemchangedListWifiList)
+	//ON_NOTIFY(LVN_ITEMCHANGED, IDC_LIST_WIFI_LIST, &CFtpClientDlg::OnLvnItemchangedListWifiList)
 	ON_NOTIFY(NM_DBLCLK, IDC_LIST_WIFI_LIST, &CFtpClientDlg::OnDblclkListWifiList)
 END_MESSAGE_MAP()
 
