@@ -223,11 +223,11 @@ void CFtpClientDlg::DisplayFileList()
 	cr.Lock();
 	m_lcFileList.SetRedraw(FALSE);
 	m_lcFileList.DeleteAllItems();
-	int iCount = (int)m_arrFileList.GetCount();
+	int iCount = m_arrFileList.GetCount();
 
-	for (int iIndex = 0 ; iIndex < iCount ; iIndex++)
+	for (int iIndex = 0; iIndex < iCount; iIndex++)
 	{
-		CFtpFileInfo *pFileInfo = (CFtpFileInfo *)m_arrFileList.GetAt(iIndex);
+		CFtpFileInfo* pFileInfo = (CFtpFileInfo*)m_arrFileList.GetAt(iIndex);
 		int iListCount = m_lcFileList.GetItemCount();
 		SetFileInfoToList(iListCount, pFileInfo);
 	}

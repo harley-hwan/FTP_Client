@@ -121,7 +121,7 @@ void CDlgDisplay::OnBnClickedCancel()
 
 void CDlgDisplay::OnSize(UINT nType, int cx, int cy)
 {
-	CDialogEx::OnSize(nType, cx, cy);
+	CDialogEx::OnSize(nType, cx, cy); 
 
 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
 	if ((nType != SIZE_MINIMIZED) && (cx > 0) && (cy > 0))
