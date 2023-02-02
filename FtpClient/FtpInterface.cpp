@@ -230,7 +230,7 @@ BOOL CFtpInterface::GetFtpFileList(CPtrArray& arrFileList, BOOL bFileAll/* = FAL
 					iFileType = ((CFtpClientDlg*)m_pOwner)->GetFtpShowFileType();
 				}
 
-				// ShortDB
+				// ShotDB
 				if (iFtpPath == 3)
 				{
 					if (_tcscmp(strExt, _T(".rbf")) !=  0)
