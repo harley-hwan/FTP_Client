@@ -14,10 +14,7 @@
 #define new DEBUG_NEW
 #endif
 
-
 // CFtpClientDlg 대화 상자
-
-
 
 CFtpClientDlg::CFtpClientDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_FTPCLIENT_DIALOG, pParent)
@@ -98,6 +95,8 @@ BEGIN_MESSAGE_MAP(CFtpClientDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_WIFI_SCAN, &CFtpClientDlg::OnBnClickedButtonWifiScan)
 	//ON_NOTIFY(LVN_ITEMCHANGED, IDC_LIST_WIFI_LIST, &CFtpClientDlg::OnLvnItemchangedListWifiList)
 	ON_NOTIFY(NM_DBLCLK, IDC_LIST_WIFI_LIST, &CFtpClientDlg::OnDblclkListWifiList)
+	ON_BN_CLICKED(IDC_BUTTON_WIFI_CONNECT, &CFtpClientDlg::OnBnClickedButtonWifiConnect)
+	ON_BN_CLICKED(IDC_BUTTON_RTC_SET, &CFtpClientDlg::OnBnClickedButtonRtcSet)
 END_MESSAGE_MAP()
 
 
@@ -164,39 +163,39 @@ void CFtpClientDlg::OnDestroy()
 }
 
 
-
-
 void CFtpClientDlg::InitDialog()
 {
-	m_ctrlFtpIP.SetWindowText(_T("192.168.8.1"));
-	m_edFtpPort.SetWindowText(_T("3999"));
-	m_edFtpID.SetWindowText(_T("dbgftp"));
-	m_edFtpPass.SetWindowText(_T("gradar"));
-	m_cbFtpPath.InsertString(0, _T("/Result"));
-	m_cbFtpPath.InsertString(1, _T("/Log"));
-	m_cbFtpPath.InsertString(2, _T("/BT_Log"));
-	m_cbFtpPath.InsertString(3, _T("/ShotDB"));
+    m_ctrlFtpIP.SetWindowText(_T("192.168.8.1"));
+    m_edFtpPort.SetWindowText(_T("3999"));
+    m_edFtpID.SetWindowText(_T("dbgftp"));
+    m_edFtpPass.SetWindowText(_T("gradar"));
+    m_cbFtpPath.InsertString(0, _T("/Result"));
+    m_cbFtpPath.InsertString(1, _T("/Log"));
+    m_cbFtpPath.InsertString(2, _T("/BT_Log"));
+    m_cbFtpPath.InsertString(3, _T("/ShotDB"));
 
-	m_cbFtpPath.SetCurSel(GetFtpPathFromConfig());
+    m_cbFtpPath.SetCurSel(GetFtpPathFromConfig());
 
-	m_lcFileList.SetExtendedStyle(/*LVS_EX_GRIDLINES | */LVS_EX_FULLROWSELECT); // 리스트 스타일
-	m_lcFileList.InsertColumn(0, _T("Time"), LVCFMT_CENTER, 150);
-	m_lcFileList.InsertColumn(1, _T("File Name"), LVCFMT_CENTER, 250);
+    m_lcFileList.SetExtendedStyle(/*LVS_EX_GRIDLINES | */LVS_EX_FULLROWSELECT); // 리스트 스타일
+    m_lcFileList.InsertColumn(0, _T("Time"), LVCFMT_CENTER, 150);
+    m_lcFileList.InsertColumn(1, _T("File Name"), LVCFMT_CENTER, 250);
 
-	m_lcWifiList.SetExtendedStyle(/*LVS_EX_GRIDLINES | */LVS_EX_FULLROWSELECT); // 리스트 스타일
-	//m_lcWifiList.InsertColumn(0, _T("No."), LVCFMT_CENTER, 50);
-	m_lcWifiList.InsertColumn(0, _T("WiFi Name"), LVCFMT_CENTER, 250);
+    // WiFi 리스트 컨트롤 스타일 수정
+    m_lcWifiList.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES); // 확장 스타일 설정
+    m_lcWifiList.ModifyStyle(0, WS_HSCROLL | WS_VSCROLL); // 가로/세로 스크롤바 추가
+    m_lcWifiList.InsertColumn(0, _T("WiFi Name"), LVCFMT_LEFT, 250);
 
-	m_iFtpShowFileType = 0;
-	m_rdImage.SetCheck(TRUE);
-	ShowControlByFileType(m_iFtpShowFileType);
+    m_iFtpShowFileType = 0;
+    m_rdImage.SetCheck(TRUE);
+    ShowControlByFileType(m_iFtpShowFileType);
 
-	RemoveFileList();
+    RemoveFileList();
 
-	MoveControl();
+    MoveControl();
 
-	InitEnableControl();
+    InitEnableControl();
 }
+
 
 void CFtpClientDlg::RemoveFileList()
 {
@@ -523,6 +522,9 @@ void CFtpClientDlg::MoveControl()
 	//PUSHBUTTON      "모든 파일 다운",IDC_BUTTON_DOWN_ALL_FILE,106,338,45,14
 	int iGap10 = 10, iGap5 = 5, iGap2 = 2;
 	CWnd* pBtnWiFiScan = GetDlgItem(IDC_BUTTON_WIFI_SCAN);
+	CWnd* pBtnWifiConnect = GetDlgItem(IDC_BUTTON_WIFI_CONNECT);
+	CWnd* pBtnRtcSet = GetDlgItem(IDC_BUTTON_RTC_SET);
+
 	CWnd* pBtnFtpCon = GetDlgItem(IDC_BUTTON_FTP_CONN);
 	CWnd* pBtnFtpDiscon = GetDlgItem(IDC_BUTTON_FTP_DISCONN);
 	CWnd* pBtnGetImg = GetDlgItem(IDC_BUTTON_GET_LAST_IMAGE);
@@ -577,7 +579,7 @@ void CFtpClientDlg::MoveControl()
 		pedImage == NULL || pedImage->GetSafeHwnd() == NULL ||
 		pRdImage == NULL || pRdImage->GetSafeHwnd() == NULL ||
 		pRdText == NULL || pRdText->GetSafeHwnd() == NULL ||
-		pBtnWiFiScan == NULL ||
+		pBtnWiFiScan == NULL || pBtnWifiConnect == NULL ||
 		false)
 		return;
 
@@ -708,13 +710,51 @@ void CFtpClientDlg::MoveControl()
 	pBtnWiFiScan->GetWindowRect(rcBtnWifiScan);
 	ScreenToClient(rcBtnWifiScan);
 	pBtnWiFiScan->SetWindowPos(NULL,
-							   iGap10,
-							   rcGroupWifi.bottom+ iGap10,
-							   rcBtnConn.Width(),
-							   rcBtnConn.Height(),
-							   SWP_NOACTIVATE | SWP_NOZORDER);
+		iGap10,
+		rcGroupWifi.bottom + iGap10,
+		rcBtnConn.Width(),
+		rcBtnConn.Height(),
+		SWP_NOACTIVATE | SWP_NOZORDER);
 	pBtnWiFiScan->GetWindowRect(rcBtnWifiScan);
 	ScreenToClient(rcBtnWifiScan);
+
+	// WiFi Connect
+	CRect rcBtnWifiConnect;
+	if (pBtnWifiConnect && pBtnWifiConnect->GetSafeHwnd())
+	{
+		pBtnWifiConnect->GetWindowRect(rcBtnWifiConnect);
+
+		ScreenToClient(rcBtnWifiConnect);
+		pBtnWifiConnect->SetWindowPos(NULL,
+			rcBtnWifiScan.right + iGap10,
+			rcBtnWifiScan.top,
+			rcBtnConn.Width(),
+			rcBtnConn.Height(),
+			SWP_NOACTIVATE | SWP_NOZORDER);
+		pBtnWifiConnect->GetWindowRect(rcBtnWifiConnect);
+		ScreenToClient(rcBtnWifiConnect);
+
+		pBtnWifiConnect->Invalidate();
+	}
+
+	// RTC Setting
+
+	if (pBtnRtcSet && pBtnRtcSet->GetSafeHwnd())
+	{
+		CRect rcBtnRtcSet;
+		pBtnRtcSet->GetWindowRect(rcBtnRtcSet);
+		ScreenToClient(rcBtnRtcSet);
+		pBtnRtcSet->SetWindowPos(NULL,
+			rcBtnWifiConnect.right + iGap10,
+			rcBtnWifiConnect.top,
+			rcBtnConn.Width(),
+			rcBtnConn.Height(),
+			SWP_NOACTIVATE | SWP_NOZORDER);
+		pBtnRtcSet->GetWindowRect(rcBtnRtcSet);
+		ScreenToClient(rcBtnRtcSet);
+
+		pBtnRtcSet->Invalidate();
+	}
 	
 	// IP - STATIC
 	CRect rcStaticIP;
@@ -1531,41 +1571,123 @@ void CFtpClientDlg::OnCbnSelchangeComboFtpPath()
 // wifi list
 void CFtpClientDlg::OnBnClickedButtonWifiScan()
 {
-	// TODO: Add your control notification handler code here
-	CString m_str;
-	string ip;
-	string wave = "WAVE";
-
+	std::vector<std::tuple<CString, LONG, CString>> v_Wifilist;
 	m_lcWifiList.DeleteAllItems();
-	system("netsh wlan show networks mode = bssid | findstr \"^SSID Signal\" > wifilist.txt");
-	ifstream ifs("wifilist.txt");
-	ofstream ofs("wifilist_out.txt");
-	while (ifs)
-	{
-		string line;
-		getline(ifs, line, ':');
-		getline(ifs, line, ' ');
-		getline(ifs, line, '\n');
 
-		int nItemNum = m_lcWifiList.GetItemCount();
-		//if (line.find(wave) == 0)
+	v_Wifilist = ListAvailableWifiNetworks();
+
+	// RSSI 값 기준으로 내림차순 정렬
+	std::sort(v_Wifilist.begin(), v_Wifilist.end(),
+		[](const auto& a, const auto& b) {
+			return std::get<1>(a) > std::get<1>(b);
+		});
+
+	int nIndex = 0;
+	for (const auto& item : v_Wifilist) {
+		CString ssid, listItem;
+		LONG rssi;
+		CString linkTime;
+		std::tie(ssid, rssi, linkTime) = item;
+
+		// WAVE로 시작하는 SSID만 리스트에 추가
+		if (ssid.Find(_T("WAVE")) == 0)
 		{
-			//ofs << line.find(wave) << endl;
-			ofs << line << endl;
-			m_str = line.c_str();
-			m_lcWifiList.InsertItem(nItemNum, m_str);
+			listItem.Format(_T("%s - RSSI: %d - First Connect: %s"),
+				ssid, rssi, linkTime);
+			m_lcWifiList.InsertItem(nIndex, listItem);
+			nIndex++;
 		}
-		/*getline(ifs, line, '(');
-		cout << line;
-		getline(ifs, ip, ')');	
-		cout << ip;
-		getline(ifs, line, '\n');*/
 	}
-
-	ifs.close();
-	//cout << "out" << endl;
 }
 
+std::vector<std::tuple<CString, LONG, CString>> CFtpClientDlg::ListAvailableWifiNetworks()
+{
+	std::vector<std::tuple<CString, LONG, CString>> availableNetworks;
+	DWORD negotiatedVersion;
+	HANDLE clientHandle = NULL;
+
+	DWORD ret = WlanOpenHandle(2, NULL, &negotiatedVersion, &clientHandle);
+	if (ret != ERROR_SUCCESS) {
+		return availableNetworks;
+	}
+
+	PWLAN_INTERFACE_INFO_LIST ifList = NULL;
+	ret = WlanEnumInterfaces(clientHandle, NULL, &ifList);
+	if (ret != ERROR_SUCCESS) {
+		WlanCloseHandle(clientHandle, NULL);
+		return availableNetworks;
+	}
+
+	for (DWORD i = 0; i < ifList->dwNumberOfItems; i++) {
+		PWLAN_INTERFACE_INFO pIfInfo = &ifList->InterfaceInfo[i];
+		PWLAN_BSS_LIST pBssList = NULL;
+		ret = WlanGetNetworkBssList(clientHandle, &pIfInfo->InterfaceGuid, NULL,
+			dot11_BSS_type_any, FALSE, NULL, &pBssList);
+
+		if (ret != ERROR_SUCCESS) {
+			continue;
+		}
+
+		for (DWORD j = 0; j < pBssList->dwNumberOfItems; j++) {
+			PWLAN_BSS_ENTRY pBssEntry = &pBssList->wlanBssEntries[j];
+			DOT11_SSID ssid = pBssEntry->dot11Ssid;
+			std::wstring networkName = ConvertSSID(ssid.ucSSID, ssid.uSSIDLength);
+			LONG rssi = pBssEntry->lRssi;
+
+			ULARGE_INTEGER ftSystemTime1970;
+			ftSystemTime1970.QuadPart = 116444736000000000ULL;
+			ULARGE_INTEGER ftTimestamp;
+			ftTimestamp.QuadPart = ftSystemTime1970.QuadPart + (pBssEntry->ullHostTimestamp * 10);
+
+			FILETIME ftFirstAvailableTime;
+			ftFirstAvailableTime.dwHighDateTime = ftTimestamp.HighPart;
+			ftFirstAvailableTime.dwLowDateTime = ftTimestamp.LowPart;
+
+			SYSTEMTIME stFirstAvailableTime;
+			FileTimeToSystemTime(&ftFirstAvailableTime, &stFirstAvailableTime);
+
+			CString firstAvailableTime;
+			firstAvailableTime.Format(_T("%02u:%02u:%02u"),
+				stFirstAvailableTime.wHour,
+				stFirstAvailableTime.wMinute,
+				stFirstAvailableTime.wSecond);
+
+			CStringW networkNameW = CStringW(networkName.c_str());
+			CString networkNameT = CString(networkNameW);
+			availableNetworks.push_back(std::make_tuple(networkNameT, rssi, firstAvailableTime));
+		}
+		WlanFreeMemory(pBssList);
+	}
+
+	WlanFreeMemory(ifList);
+	WlanCloseHandle(clientHandle, NULL);
+	return availableNetworks;
+}
+
+
+std::wstring CFtpClientDlg::ConvertSSID(const unsigned char* ssid, size_t ssidLength)
+{
+	int len = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS,
+		reinterpret_cast<const char*>(ssid), ssidLength, NULL, 0);
+
+	// UTF-8로 변환 실패시 시스템 기본 코드페이지로 시도
+	if (len == 0 && GetLastError() == ERROR_NO_UNICODE_TRANSLATION) {
+		len = MultiByteToWideChar(CP_ACP, 0,
+			reinterpret_cast<const char*>(ssid), ssidLength, NULL, 0);
+	}
+
+	if (len > 0) {
+		std::wstring networkName(len, L'\0');
+		if (MultiByteToWideChar(CP_UTF8, 0,
+			reinterpret_cast<const char*>(ssid), ssidLength,
+			&networkName[0], len) > 0) {
+			return networkName;
+		}
+	}
+
+	// 변환 실패시 빈 문자열 반환
+	return std::wstring();
+}
 
 //void CFtpClientDlg::OnLvnItemchangedListWifiList(NMHDR* pNMHDR, LRESULT* pResult)
 //{
@@ -1613,3 +1735,253 @@ void CFtpClientDlg::OnDblclkListWifiList(NMHDR* pNMHDR, LRESULT* pResult)
 //string WIFI_NAME = "WAVE_ea:05:9f:b4";
 //string WIFI_NUM = "\"Wi-Fi 2\"";
 //string command = "netsh wlan connect ssid=" + WIFI_NAME + " name=" + WIFI_NAME + " interface=" + WIFI_NUM;
+
+void CFtpClientDlg::OnBnClickedButtonWifiConnect()
+{
+	POSITION pos = m_lcWifiList.GetFirstSelectedItemPosition();
+	if (pos != NULL) {
+		int selectedIndex = m_lcWifiList.GetNextSelectedItem(pos);
+		CString selectedNetwork = m_lcWifiList.GetItemText(selectedIndex, 0);
+
+		// SSID 부분만 추출 (SSID - RSSI: XX 형식에서)
+		std::wregex ssidPattern(L"^([^ ]+)");
+		std::wsmatch match;
+		std::wstring selectedNetworkW = selectedNetwork.GetString();
+		std::regex_search(selectedNetworkW, match, ssidPattern);
+		std::wstring networkName = match.str(1);
+		std::wstring password = L"wave1234";  // 기본 비밀번호
+
+		if (ConnectToSelectedWifi(networkName, password)) {
+			AfxMessageBox(_T("Wi-Fi에 연결되었습니다!"));
+
+			// 윈도우 타이틀 업데이트
+			CString windowTitle;
+			windowTitle.Format(_T("FTP Client - Connected to %s"),
+				CString(WStringToString(networkName).c_str()));
+			this->SetWindowText(windowTitle);
+		}
+		else {
+			AfxMessageBox(_T("Wi-Fi 연결에 실패했습니다."));
+		}
+	}
+	else {
+		AfxMessageBox(_T("선택된 Wi-Fi가 없습니다."));
+	}
+}
+
+std::wstring CFtpClientDlg::StringToWString(const std::string& str)
+{
+	wstring wstr;
+	size_t size;
+	wstr.resize(str.length());
+	mbstowcs_s(&size, &wstr[0], wstr.size() + 1, str.c_str(), str.size());
+	return wstr;
+}
+
+std::string CFtpClientDlg::WStringToString(const std::wstring& wstr)
+{
+	string str;
+	size_t size;
+	str.resize(wstr.length());
+	wcstombs_s(&size, &str[0], str.size() + 1, wstr.c_str(), wstr.size());
+	return str;
+}
+
+bool CFtpClientDlg::ConnectToSelectedWifi(const std::wstring& networkName, const std::wstring& password)
+{
+	std::string name(networkName.begin(), networkName.end());
+	std::string pass(password.begin(), password.end());
+	std::string fileName = "myWlan.xml";
+
+	std::ofstream xmlFile;
+	xmlFile.open(fileName.c_str());
+	if (!xmlFile.is_open()) {
+		return false;
+	}
+
+	// XML 파일 작성
+	xmlFile << "<?xml version=\"1.0\"?>\n";
+	xmlFile << "<WLANProfile xmlns=\"http://www.microsoft.com/networking/WLAN/profile/v1\">\n";
+	xmlFile << "<name>" << name << "</name>\n";
+	xmlFile << "<SSIDConfig>\n<SSID>\n<hex>";
+	for (int i = 0; i < name.length(); i++)
+		xmlFile << std::hex << (int)name.at(i);
+	xmlFile << "</hex>\n<name>" << name << "</name>\n</SSID>\n</SSIDConfig>\n";
+	xmlFile << "<connectionType>ESS</connectionType>\n";
+	xmlFile << "<connectionMode>auto</connectionMode>\n<MSM>\n<security>\n";
+	xmlFile << "<authEncryption>\n<authentication>WPA2PSK</authentication>\n";
+	xmlFile << "<encryption>AES</encryption>\n<useOneX>false</useOneX>\n";
+	xmlFile << "</authEncryption>\n<sharedKey>\n<keyType>passPhrase</keyType>\n";
+	xmlFile << "<protected>false</protected>\n<keyMaterial>" << pass << "</keyMaterial>\n";
+	xmlFile << "</sharedKey>\n</security>\n</MSM>\n";
+	xmlFile << "<MacRandomization xmlns=\"http://www.microsoft.com/networking/WLAN/profile/v3\">\n";
+	xmlFile << "<enableRandomization>false</enableRandomization>\n</MacRandomization>\n";
+	xmlFile << "</WLANProfile>";
+	xmlFile.close();
+
+	// 시스템 프로파일에 XML 파일 추가
+	std::string command = "netsh wlan add profile filename=" + fileName;
+	if (system(command.c_str()) != 0) {
+		return false;
+	}
+
+	// 네트워크 연결
+	command = "netsh wlan connect name=" + name;
+	if (system(command.c_str()) == 0) {
+		return true;
+	}
+
+	return false;
+}
+
+
+std::string CFtpClientDlg::executeRemoteSshCommand(const char* command, bool isVersionCheck)
+{
+	WSADATA wsaData;
+	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
+		return "";
+	}
+
+	const char* ip = "192.168.8.1";
+	const char* username = "root";
+	const char* password = "fa";
+	int port = 22;
+
+	SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);
+	if (sock == INVALID_SOCKET) {
+		WSACleanup();
+		return "";
+	}
+
+	sockaddr_in sin;
+	sin.sin_family = AF_INET;
+	sin.sin_port = htons(port);
+
+	if (inet_pton(AF_INET, ip, &(sin.sin_addr)) != 1) {
+		closesocket(sock);
+		WSACleanup();
+		return "";
+	}
+
+	if (connect(sock, (struct sockaddr*)(&sin), sizeof(struct sockaddr_in)) != 0) {
+		closesocket(sock);
+		WSACleanup();
+		return "";
+	}
+
+	if (libssh2_init(0) != 0) {
+		closesocket(sock);
+		WSACleanup();
+		return "";
+	}
+
+	LIBSSH2_SESSION* session = libssh2_session_init();
+	if (libssh2_session_handshake(session, (int)sock) != 0) {
+		closesocket(sock);
+		libssh2_exit();
+		WSACleanup();
+		return "";
+	}
+
+	if (libssh2_userauth_password(session, username, password) != 0) {
+		closesocket(sock);
+		libssh2_session_free(session);
+		libssh2_exit();
+		WSACleanup();
+		return "";
+	}
+
+	LIBSSH2_CHANNEL* channel = libssh2_channel_open_session(session);
+	if (channel == NULL) {
+		closesocket(sock);
+		libssh2_session_free(session);
+		libssh2_exit();
+		WSACleanup();
+		return "";
+	}
+
+	if (libssh2_channel_request_pty(channel, "xterm") != 0) {
+		libssh2_channel_free(channel);
+		closesocket(sock);
+		libssh2_session_free(session);
+		libssh2_exit();
+		WSACleanup();
+		return "";
+	}
+
+	libssh2_channel_setenv(channel, "TERM", "xterm");
+	if (libssh2_channel_exec(channel, command) != 0) {
+		libssh2_channel_free(channel);
+		closesocket(sock);
+		libssh2_session_free(session);
+		libssh2_exit();
+		WSACleanup();
+		return "";
+	}
+
+	std::string output;
+	char buffer[4096];
+	ssize_t bytecount;
+	while ((bytecount = libssh2_channel_read(channel, buffer, sizeof(buffer) - 1)) > 0) {
+		buffer[bytecount] = '\0';
+		output += buffer;
+	}
+
+	libssh2_channel_free(channel);
+	libssh2_session_disconnect(session, "Finished session");
+	libssh2_session_free(session);
+	libssh2_exit();
+	closesocket(sock);
+	WSACleanup();
+
+	return output;
+}
+
+void CFtpClientDlg::OnBnClickedButtonRtcSet()
+{
+	CWnd* pRtcButton = GetDlgItem(IDC_BUTTON_RTC_SET);
+	if (!pRtcButton || !pRtcButton->GetSafeHwnd()) {
+		AfxMessageBox(_T("UI 컨트롤 오류가 발생했습니다."));
+		return;
+	}
+
+	CWaitCursor wait; 
+	pRtcButton->EnableWindow(FALSE);
+	pRtcButton->UpdateWindow();
+
+	try {
+		SYSTEMTIME st;
+		GetLocalTime(&st);
+
+		char command[256] = { 0 };
+		if (_snprintf_s(command, sizeof(command),
+			"cd /home/pi/test && ./date_set.sh %02d %02d %02d %02d %02d %02d",
+			st.wYear % 100, st.wMonth, st.wDay,
+			st.wHour, st.wMinute, st.wSecond) < 0) {
+			throw std::runtime_error("Command string formation failed");
+		}
+
+		std::string result = executeRemoteSshCommand(command, false);
+
+		if (!result.empty()) {
+			CString resultMsg;
+			resultMsg.Format(_T("[Result]\n%s"), CString(result.c_str()));
+			AfxMessageBox(resultMsg, MB_ICONINFORMATION);
+		}
+		else {
+			throw std::runtime_error("RTC 시간 설정 실패");
+		}
+	}
+	catch (const std::exception& e) {
+		CString errorMsg;
+		errorMsg.Format(_T("오류: %s"), CString(e.what()));
+		AfxMessageBox(errorMsg, MB_ICONERROR);
+	}
+	catch (...) {
+		AfxMessageBox(_T("알 수 없는 오류가 발생했습니다."), MB_ICONERROR);
+	}
+
+	// UI 상태 복구
+	pRtcButton->EnableWindow(TRUE);
+	pRtcButton->UpdateWindow();
+}

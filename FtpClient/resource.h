@@ -31,10 +31,12 @@
 #define IDC_COMBO_FTP_PATH              1022
 #define IDC_RADIO_IMAGE                 1023
 #define IDC_RADIO2                      1024
-#define IDC_RADIO_TEXT                  1024
-#define IDC_EDIT_LAST_WRTIE_TIME_IMAGE  1025
-#define IDC_BUTTON_WIFI_SCAN            1026
-#define IDC_LIST_WIFI_LIST              1028
+#define IDC_RADIO_TEXT                  1025
+#define IDC_EDIT_LAST_WRTIE_TIME_IMAGE  1026
+#define IDC_BUTTON_WIFI_SCAN            1027
+#define IDC_BUTTON_WIFI_CONNECT         1028
+#define IDC_LIST_WIFI_LIST              1029
+#define IDC_BUTTON_RTC_SET              1030
 
 // Next default values for new objects
 // 

@@ -6,6 +6,26 @@
 #include "FtpInterface.h"
 #include "DlgDisplay.h"
 
+#include <iostream>
+
+#include <wlanapi.h>
+#include <vector>
+#include <tuple>
+#include <string>
+#include <algorithm>
+#pragma comment(lib, "wlanapi.lib")
+
+#include <regex>
+#include <fstream>
+
+#include <libssh2/include/libssh2.h>
+#include <libssh2/include/libssh2_sftp.h>
+
+#include <WinSock2.h>
+#include <WS2tcpip.h>
+#pragma comment(lib, "ws2_32.lib")
+#pragma comment(lib, "libssh2.lib")
+
 // CFtpClientDlg 대화 상자
 class CFtpClientDlg : public CDialogEx
 {
@@ -86,6 +106,19 @@ protected:
 	int SetFileInfoToList(int iIndex, CFtpFileInfo *pFileInfo); // 파일 정보 리스트에 입력
 	void MoveControl();
 
+private:
+	// 2025-01-03 : Wifi Scan
+	std::vector<std::tuple<CString, LONG, CString>> ListAvailableWifiNetworks();
+	std::wstring ConvertSSID(const unsigned char* ssid, size_t ssidLength);
+
+	// 2025-01-03 : Wifi Connect
+	std::wstring StringToWString(const std::string& str);
+	std::string WStringToString(const std::wstring& wstr);
+	bool ConnectToSelectedWifi(const std::wstring& networkName, const std::wstring& password);
+
+	// 2025-01-03 : RTC Setting
+	std::string executeRemoteSshCommand(const char* command, bool isVersionCheck = false);
+
 protected:
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnBnClickedCancel();
@@ -108,4 +141,6 @@ public:
 	afx_msg void OnBnClickedButtonWifiScan();
 	afx_msg void OnDblclkListWifiList(NMHDR* pNMHDR, LRESULT* pResult);
 	//afx_msg void OnLvnItemchangedListWifiList(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnBnClickedButtonWifiConnect();
+	afx_msg void OnBnClickedButtonRtcSet();
 };
