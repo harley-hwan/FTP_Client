@@ -1937,6 +1937,7 @@ std::string CFtpClientDlg::executeRemoteSshCommand(const char* command, bool isV
 	return output;
 }
 
+
 void CFtpClientDlg::OnBnClickedButtonRtcSet()
 {
 	CWnd* pRtcButton = GetDlgItem(IDC_BUTTON_RTC_SET);
@@ -1945,7 +1946,7 @@ void CFtpClientDlg::OnBnClickedButtonRtcSet()
 		return;
 	}
 
-	CWaitCursor wait; 
+	CWaitCursor wait;
 	pRtcButton->EnableWindow(FALSE);
 	pRtcButton->UpdateWindow();
 
@@ -1966,7 +1967,52 @@ void CFtpClientDlg::OnBnClickedButtonRtcSet()
 		if (!result.empty()) {
 			CString resultMsg;
 			resultMsg.Format(_T("[Result]\n%s"), CString(result.c_str()));
-			AfxMessageBox(resultMsg, MB_ICONINFORMATION);
+			if (AfxMessageBox(resultMsg, MB_ICONINFORMATION | MB_OK) == IDOK) {
+				// 현재 시스템 시간 가져오기
+				SYSTEMTIME currentSt;
+				GetLocalTime(&currentSt);
+
+				// RTC 시간 확인
+				const char* checkTimeCmd = "date '+%Y,%m,%d,%H,%M,%S'";
+				std::string timeResult = executeRemoteSshCommand(checkTimeCmd, false);
+
+				if (!timeResult.empty()) {
+					// RTC 시간 파싱
+					int rtcYear, rtcMonth, rtcDay, rtcHour, rtcMin, rtcSec;
+					sscanf_s(timeResult.c_str(), "%d,%d,%d,%d,%d,%d",
+						&rtcYear, &rtcMonth, &rtcDay, &rtcHour, &rtcMin, &rtcSec);
+
+					// 시간 차이 계산 (초 단위)
+					CTime rtcTime(rtcYear, rtcMonth, rtcDay, rtcHour, rtcMin, rtcSec);
+					CTime sysTime(currentSt.wYear, currentSt.wMonth, currentSt.wDay,
+						currentSt.wHour, currentSt.wMinute, currentSt.wSecond);
+
+					CTimeSpan diff = sysTime - rtcTime;
+					int diffSeconds = abs((int)diff.GetTotalSeconds());
+
+					// 허용 오차 범위 (3초)
+					const int ALLOWED_DIFF_SECONDS = 3;
+					bool isWithinRange = diffSeconds <= ALLOWED_DIFF_SECONDS;
+
+					CString timeMsg;
+					timeMsg.Format(_T("[Current Time]\n%s\n\n[Time Verification]\n")
+						_T("System Time: %04d,%02d,%02d,%02d,%02d,%02d\n")
+						_T("RTC Time: %04d,%02d,%02d,%02d,%02d,%02d\n")
+						_T("Time Difference: %d seconds\n")
+						_T("Status: %s"),
+						CString(timeResult.c_str()),
+						currentSt.wYear, currentSt.wMonth, currentSt.wDay,
+						currentSt.wHour, currentSt.wMinute, currentSt.wSecond,
+						rtcYear, rtcMonth, rtcDay, rtcHour, rtcMin, rtcSec,
+						diffSeconds,
+						isWithinRange ? _T("OK (Within allowed range)") : _T("ERROR (Outside allowed range)"));
+
+					AfxMessageBox(timeMsg, isWithinRange ? MB_ICONINFORMATION : MB_ICONWARNING);
+				}
+				else {
+					throw std::runtime_error("시간 확인 실패");
+				}
+			}
 		}
 		else {
 			throw std::runtime_error("RTC 시간 설정 실패");
