@@ -26,6 +26,8 @@
 #pragma comment(lib, "ws2_32.lib")
 #pragma comment(lib, "libssh2.lib")
 
+#define GRADER_OUTDOOR_MODE
+
 // CFtpClientDlg 대화 상자
 class CFtpClientDlg : public CDialogEx
 {
