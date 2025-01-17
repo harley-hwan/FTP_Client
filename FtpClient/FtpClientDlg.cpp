@@ -1069,6 +1069,16 @@ void CFtpClientDlg::OnBnClickedButtonFtpConn()
 		strMsg.Format(_T("경로 설정 실패(%d, %s)"), dwRes, strMsg);
 		AfxMessageBox(strMsg);
 	}
+
+#ifdef GRADER_OUTDOOR_MODE
+	// RTC Set 버튼에 클릭 메시지 전송
+	CWnd* pRtcButton = GetDlgItem(IDC_BUTTON_RTC_SET);
+	if (pRtcButton && pRtcButton->GetSafeHwnd())
+	{
+		pRtcButton->SendMessage(BM_CLICK);
+	}
+#endif
+
 }
 
 
@@ -1136,6 +1146,7 @@ void CFtpClientDlg::OnBnClickedButtonGetLastFile()
 	m_iListCtrlFileType = m_iFtpShowFileType;
 }
 
+// 수집 시작 버튼
 void CFtpClientDlg::OnBnClickedButtonStartThread()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
